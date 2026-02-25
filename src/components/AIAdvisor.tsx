@@ -44,11 +44,23 @@ export const AIAdvisor: React.FC = () => {
   return (
     <section className="py-32 bg-wepp-dark relative overflow-hidden">
       <div className="absolute inset-0 technical-grid opacity-10"></div>
-      <div className="absolute -right-1/4 -bottom-1/4 w-1/2 h-1/2 bg-wepp-red/5 blur-[120px] rounded-full"></div>
-      
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.05, 0.1, 0.05],
+        }}
+        transition={{ duration: 10, repeat: Infinity }}
+        className="absolute -right-1/4 -bottom-1/4 w-1/2 h-1/2 bg-wepp-red/5 blur-[120px] rounded-full"
+      />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-24 items-center">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
+          >
             <div className="flex items-center gap-3 mb-8">
               <div className="p-2 bg-wepp-red/20 rounded-lg border border-wepp-red/30">
                 <Sparkles className="text-wepp-red w-5 h-5" />
@@ -62,26 +74,37 @@ export const AIAdvisor: React.FC = () => {
             <p className="text-slate-400 text-lg mb-12 leading-relaxed font-light max-w-xl">
               Nuestra IA ha sido entrenada con décadas de experiencia en ingeniería química alemana para ofrecerle la solución exacta a cualquier problema de rendimiento.
             </p>
-            
-            <div className="space-y-6">
-              <div className="flex items-center gap-4 p-6 glass-panel rounded-2xl border-white/5">
-                <ShieldCheck className="w-8 h-8 text-wepp-red" />
-                <div>
-                  <p className="font-black text-xs uppercase tracking-widest text-white">Precisión Certificada</p>
-                  <p className="text-slate-500 text-xs">Recomendaciones basadas en protocolos oficiales.</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 p-6 glass-panel rounded-2xl border-white/5">
-                <RotateCcw className="w-8 h-8 text-wepp-red" />
-                <div>
-                  <p className="font-black text-xs uppercase tracking-widest text-white">Base de Datos Global</p>
-                  <p className="text-slate-500 text-xs">Acceso a miles de casos de éxito en talleres.</p>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <div className="glass-panel rounded-[32px] overflow-hidden border-white/10 flex flex-col h-[700px] shadow-2xl relative">
+            <div className="space-y-6">
+              {[
+                { icon: ShieldCheck, title: "Precisión Certificada", desc: "Recomendaciones basadas en protocolos oficiales." },
+                { icon: RotateCcw, title: "Base de Datos Global", desc: "Acceso a miles de casos de éxito en talleres." }
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.2 + (idx * 0.1) }}
+                  className="flex items-center gap-4 p-6 glass-panel rounded-2xl border-white/5 hover:border-white/10 transition-colors"
+                >
+                  <item.icon className="w-8 h-8 text-wepp-red" />
+                  <div>
+                    <p className="font-black text-xs uppercase tracking-widest text-white">{item.title}</p>
+                    <p className="text-slate-500 text-xs">{item.desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, type: "spring", bounce: 0.4 }}
+            className="glass-panel rounded-[32px] overflow-hidden border-white/10 flex flex-col h-[700px] shadow-2xl relative"
+          >
             {/* Chat Header */}
             <div className="p-10 border-b border-white/5 bg-white/5">
               <div className="flex items-center gap-5">
@@ -102,29 +125,28 @@ export const AIAdvisor: React.FC = () => {
             </div>
 
             {/* Chat Messages */}
-            <div 
+            <div
               ref={scrollRef}
-              className="flex-1 overflow-y-auto p-10 space-y-10 no-scrollbar"
+              className="flex-1 overflow-y-auto p-10 space-y-10 no-scrollbar custom-scrollbar"
             >
               <AnimatePresence initial={false}>
                 {messages.map((msg, idx) => (
                   <motion.div
                     key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ type: "spring", damping: 20, stiffness: 100 }}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     <div className={`flex gap-4 max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center ${
-                        msg.role === 'user' ? 'bg-white/10' : 'bg-wepp-red/20 border border-wepp-red/30'
-                      }`}>
+                      <div className={`w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center ${msg.role === 'user' ? 'bg-white/10' : 'bg-wepp-red/20 border border-wepp-red/30'
+                        }`}>
                         {msg.role === 'user' ? <User className="text-white w-5 h-5" /> : <Bot className="text-wepp-red w-5 h-5" />}
                       </div>
-                      <div className={`p-6 rounded-2xl text-sm leading-relaxed ${
-                        msg.role === 'user' 
-                          ? 'bg-wepp-red text-white shadow-xl shadow-wepp-red/20' 
+                      <div className={`p-6 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
+                          ? 'bg-wepp-red text-white shadow-xl shadow-wepp-red/20'
                           : 'bg-white/5 text-slate-300 border border-white/5'
-                      }`}>
+                        }`}>
                         <div className="markdown-body prose prose-invert prose-sm max-w-none font-medium">
                           <Markdown>{msg.content}</Markdown>
                         </div>
@@ -134,16 +156,23 @@ export const AIAdvisor: React.FC = () => {
                 ))}
               </AnimatePresence>
               {isLoading && (
-                <div className="flex justify-start">
-                  <div className="flex gap-4">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="flex justify-start"
+                >
+                  <div className="flex gap-4 items-center">
                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
                       <Loader2 className="text-wepp-red w-5 h-5 animate-spin" />
                     </div>
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/5 text-slate-500 text-[10px] uppercase tracking-widest font-black">
-                      Analizando parámetros técnicos...
+                    <div className="text-slate-500 text-[10px] uppercase tracking-widest font-black flex gap-1">
+                      <span>Procesando</span>
+                      <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0 }}>.</motion.span>
+                      <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}>.</motion.span>
+                      <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}>.</motion.span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
 
@@ -158,18 +187,21 @@ export const AIAdvisor: React.FC = () => {
                   placeholder="Describa el síntoma o mantenimiento..."
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-8 pr-20 text-white placeholder-slate-600 focus:outline-none focus:border-wepp-red transition-all font-bold text-sm"
                 />
-                <button 
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={handleSend}
                   disabled={isLoading || !input.trim()}
-                  className="absolute right-3 top-3 bottom-3 px-6 bg-wepp-red hover:bg-red-700 disabled:opacity-50 text-white rounded-xl transition-all shadow-lg shadow-wepp-red/20"
+                  className="absolute right-3 top-3 bottom-3 px-6 bg-wepp-red hover:bg-red-700 disabled:opacity-50 text-white rounded-xl transition-all shadow-lg shadow-wepp-red/20 flex items-center justify-center"
                 >
                   <Send className="w-5 h-5" />
-                </button>
+                </motion.button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
+
   );
 };
