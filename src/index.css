@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", serif;
+  --font-display: "Space Grotesk", sans-serif;
+  
+  --color-wepp-navy: #1B365D;
+  --color-wepp-red: #D62828;
+  --color-wepp-silver: #E2E8F0;
+  --color-wepp-dark: #0F172A;
+  --color-wepp-accent: #38BDF8;
+  --color-wepp-gold: #D4AF37;
+}
+
+@layer base {
+  body {
+    @apply bg-wepp-silver text-wepp-dark antialiased selection:bg-wepp-red selection:text-white;
+  }
+  
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+  }
+}
+
+@layer utilities {
+  .technical-grid {
+    background-image: 
+      linear-gradient(rgba(227, 30, 36, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(227, 30, 36, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .glass-panel {
+    @apply bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl;
+  }
+
+  .metallic-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-slate-100 via-slate-400 to-slate-600;
+  }
+
+  .red-glow {
+    box-shadow: 0 0 40px -10px rgba(227, 30, 36, 0.3);
+  }
+
+  .writing-mode-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
+.hero-gradient {
+  background: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 300px);
+  gap: 1.5rem;
+}
+
