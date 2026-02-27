@@ -9,20 +9,20 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       className="group bg-white rounded-3xl overflow-hidden border border-slate-100 hover:border-wepp-red/20 transition-all duration-700"
     >
       <div className="relative aspect-[4/5] overflow-hidden bg-slate-50">
-        <img 
-          src={product.image} 
+        <img
+          src={product.image}
           alt={product.name}
           className="w-full h-full object-contain p-12 group-hover:scale-110 transition-transform duration-1000"
           referrerPolicy="no-referrer"
         />
-        
+
         {/* Overlay with details on hover */}
         <div className="absolute inset-0 bg-wepp-dark/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-center p-10">
           <div className="space-y-4">
@@ -53,12 +53,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </span>
         </div>
       </div>
-      
+
       <div className="p-10">
         <h3 className="font-black text-2xl leading-tight text-wepp-navy uppercase tracking-tighter mb-6 group-hover:text-wepp-red transition-colors">
           {product.name}
         </h3>
-        
+
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Referencia</span>

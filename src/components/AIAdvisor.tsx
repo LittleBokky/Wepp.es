@@ -3,6 +3,7 @@ import { Sparkles, Send, Bot, User, Loader2, RotateCcw, ShieldCheck } from 'luci
 import { motion, AnimatePresence } from 'motion/react';
 import Markdown from 'react-markdown';
 import { getProductRecommendation } from '../services/geminiService';
+import { useLanguage } from '../services/LanguageContext';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -10,8 +11,9 @@ interface Message {
 }
 
 export const AIAdvisor: React.FC = () => {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: '¡Bienvenido al Centro de Diagnóstico WEPP! Soy su asesor técnico inteligente. Por favor, describa los síntomas de su vehículo o el mantenimiento que desea realizar.' }
+    { role: 'assistant', content: t('advisor.welcome') }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -35,7 +37,7 @@ export const AIAdvisor: React.FC = () => {
       const response = await getProductRecommendation(userMessage);
       setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'Lo siento, ha ocurrido un error en la conexión con el servidor de diagnóstico. Por favor, inténtelo de nuevo.' }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: t('advisor.error') }]);
     } finally {
       setIsLoading(false);
     }
@@ -65,20 +67,20 @@ export const AIAdvisor: React.FC = () => {
               <div className="p-2 bg-wepp-red/20 rounded-lg border border-wepp-red/30">
                 <Sparkles className="text-wepp-red w-5 h-5" />
               </div>
-              <span className="text-wepp-red font-black uppercase tracking-[0.3em] text-[10px]">Diagnóstico Inteligente DCT</span>
+              <span className="text-wepp-red font-black uppercase tracking-[0.3em] text-[10px]">{t('advisor.badge')}</span>
             </div>
             <h2 className="text-5xl md:text-7xl font-black mb-8 leading-[0.9] text-white uppercase tracking-tighter">
-              SOPORTE <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500">EN TIEMPO REAL.</span>
+              {t('advisor.title')} <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500">{t('advisor.title_alt')}</span>
             </h2>
             <p className="text-slate-400 text-lg mb-12 leading-relaxed font-light max-w-xl">
-              Nuestra IA ha sido entrenada con décadas de experiencia en ingeniería química alemana para ofrecerle la solución exacta a cualquier problema de rendimiento.
+              {t('advisor.desc')}
             </p>
 
             <div className="space-y-6">
               {[
-                { icon: ShieldCheck, title: "Precisión Certificada", desc: "Recomendaciones basadas en protocolos oficiales." },
-                { icon: RotateCcw, title: "Base de Datos Global", desc: "Acceso a miles de casos de éxito en talleres." }
+                { icon: ShieldCheck, title: t('advisor.feat1_title'), desc: t('advisor.feat1_desc') },
+                { icon: RotateCcw, title: t('advisor.feat2_title'), desc: t('advisor.feat2_desc') }
               ].map((item, idx) => (
                 <motion.div
                   key={idx}
@@ -144,8 +146,8 @@ export const AIAdvisor: React.FC = () => {
                         {msg.role === 'user' ? <User className="text-white w-5 h-5" /> : <Bot className="text-wepp-red w-5 h-5" />}
                       </div>
                       <div className={`p-6 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                          ? 'bg-wepp-red text-white shadow-xl shadow-wepp-red/20'
-                          : 'bg-white/5 text-slate-300 border border-white/5'
+                        ? 'bg-wepp-red text-white shadow-xl shadow-wepp-red/20'
+                        : 'bg-white/5 text-slate-300 border border-white/5'
                         }`}>
                         <div className="markdown-body prose prose-invert prose-sm max-w-none font-medium">
                           <Markdown>{msg.content}</Markdown>
@@ -166,7 +168,7 @@ export const AIAdvisor: React.FC = () => {
                       <Loader2 className="text-wepp-red w-5 h-5 animate-spin" />
                     </div>
                     <div className="text-slate-500 text-[10px] uppercase tracking-widest font-black flex gap-1">
-                      <span>Procesando</span>
+                      <span>{t('advisor.processing')}</span>
                       <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0 }}>.</motion.span>
                       <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}>.</motion.span>
                       <motion.span animate={{ opacity: [0, 1, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}>.</motion.span>
@@ -184,7 +186,7 @@ export const AIAdvisor: React.FC = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Describa el síntoma o mantenimiento..."
+                  placeholder={t('advisor.placeholder')}
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-6 pl-8 pr-20 text-white placeholder-slate-600 focus:outline-none focus:border-wepp-red transition-all font-bold text-sm"
                 />
                 <motion.button

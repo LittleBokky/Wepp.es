@@ -5,12 +5,24 @@ import { ProductCard } from './components/ProductCard';
 import { AIAdvisor } from './components/AIAdvisor';
 import { Footer } from './components/Footer';
 import { AboutPage } from './components/AboutPage';
+import { ContactSection } from './components/ContactSection';
 import { PRODUCTS } from './types';
 import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu } from 'lucide-react';
 import { motion } from 'motion/react';
 
+import { LanguageProvider, useLanguage } from './services/LanguageContext';
+
 export default function App() {
-  const [view, setView] = useState<'home' | 'products' | 'about'>('home');
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
+  );
+}
+
+function AppContent() {
+  const { t } = useLanguage();
+  const [view, setView] = useState<'home' | 'products' | 'about' | 'contact'>('home');
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
@@ -49,7 +61,7 @@ export default function App() {
 
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
                 <div className="flex items-center gap-4 opacity-60">
-                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-wepp-navy">Partner Tecnológico</span>
+                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-wepp-navy">{t('tech.badge')}</span>
                   <div className="h-[1px] flex-grow bg-slate-100"></div>
                 </div>
               </div>
@@ -103,7 +115,7 @@ export default function App() {
             </div>
 
             {/* Technology Section - Bento Grid */}
-            <section className="py-32 bg-wepp-silver overflow-hidden">
+            <section id="tecnologia" className="py-32 bg-wepp-silver overflow-hidden">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
@@ -114,11 +126,11 @@ export default function App() {
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <div className="h-[2px] w-8 bg-wepp-red"></div>
-                    <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">Innovación Alemana</span>
+                    <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('tech.badge')}</span>
                   </div>
                   <h2 className="text-5xl md:text-7xl font-black text-wepp-navy uppercase tracking-tighter leading-none mb-8">
-                    TECNOLOGÍA <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500">DE VANGUARDIA.</span>
+                    {t('tech.title')} <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500">{t('tech.title_alt')}</span>
                   </h2>
                 </motion.div>
 
@@ -139,8 +151,8 @@ export default function App() {
                     <div className="absolute inset-0 bg-gradient-to-t from-wepp-navy via-transparent to-transparent"></div>
                     <div className="absolute bottom-0 left-0 p-12">
                       <Cpu className="w-12 h-12 text-wepp-red mb-6" />
-                      <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">Deposit Control Technology</h3>
-                      <p className="text-slate-300 max-w-md">La base de todos nuestros productos. Una fórmula molecular que desintegra depósitos sin dañar componentes sensibles.</p>
+                      <h3 className="text-3xl font-black text-white mb-4 uppercase tracking-tighter">{t('tech.dct_title')}</h3>
+                      <p className="text-slate-300 max-w-md">{t('tech.dct_desc')}</p>
                     </div>
                   </motion.div>
 
@@ -152,8 +164,8 @@ export default function App() {
                     className="bg-white p-10 rounded-3xl border border-slate-200 hover:border-wepp-red transition-colors group shadow-xl"
                   >
                     <Zap className="w-10 h-10 text-wepp-red mb-6 group-hover:scale-110 transition-transform" />
-                    <h3 className="text-xl font-black text-wepp-navy mb-2 uppercase tracking-tighter">Potencia Inmediata</h3>
-                    <p className="text-slate-500 text-sm">Resultados perceptibles desde los primeros kilómetros de uso.</p>
+                    <h3 className="text-xl font-black text-wepp-navy mb-2 uppercase tracking-tighter">{t('tech.power_title')}</h3>
+                    <p className="text-slate-500 text-sm">{t('tech.power_desc')}</p>
                   </motion.div>
 
                   <motion.div
@@ -164,8 +176,8 @@ export default function App() {
                     className="bg-wepp-red p-10 rounded-3xl group shadow-xl shadow-wepp-red/20"
                   >
                     <ShieldCheck className="w-10 h-10 text-white mb-6 group-hover:rotate-12 transition-transform" />
-                    <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">Protección Total</h3>
-                    <p className="text-red-100 text-sm">Certificación TUV que garantiza la seguridad de su motor.</p>
+                    <h3 className="text-xl font-black text-white mb-2 uppercase tracking-tighter">{t('tech.shield_title')}</h3>
+                    <p className="text-red-100 text-sm">{t('tech.shield_desc')}</p>
                   </motion.div>
 
                   <motion.div
@@ -179,13 +191,13 @@ export default function App() {
                       <Award className="w-32 h-32 text-white" />
                     </div>
                     <div className="relative z-10">
-                      <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">Estándar de Oro en Automoción</h3>
-                      <p className="text-slate-400 max-w-md mb-6">Utilizado por los principales fabricantes alemanes en sus programas de mantenimiento oficial.</p>
+                      <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">{t('tech.gold_title')}</h3>
+                      <p className="text-slate-400 max-w-md mb-6">{t('tech.gold_desc')}</p>
                       <button
                         onClick={() => document.getElementById('sobre-nosotros')?.scrollIntoView({ behavior: 'smooth' })}
                         className="text-wepp-red font-black text-xs uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all"
                       >
-                        Saber más <ChevronRight className="w-4 h-4" />
+                        {t('tech.more')} <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
                   </motion.div>
@@ -223,7 +235,7 @@ export default function App() {
                       className="absolute -bottom-10 -right-10 bg-wepp-red p-12 rounded-[32px] shadow-2xl shadow-wepp-red/20 hidden md:block"
                     >
                       <h3 className="text-white font-black text-5xl tracking-tighter mb-1">45+</h3>
-                      <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.2em]">Años de Maestría Alemana</p>
+                      <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.2em]">{t('about.badge')}</p>
                     </motion.div>
                   </motion.div>
 
@@ -237,26 +249,24 @@ export default function App() {
                     >
                       <div className="flex items-center gap-3 mb-8">
                         <div className="h-[1px] w-12 bg-wepp-red"></div>
-                        <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.4em]">Nuestro Legado</span>
+                        <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.4em]">{t('about.badge')}</span>
                       </div>
 
                       <h2 className="text-4xl md:text-6xl font-black text-wepp-navy leading-[0.9] uppercase tracking-tighter mb-10">
-                        Hacemos que los coches <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500 italic font-serif normal-case tracking-normal">funcionen mejor.</span>
+                        {t('about.title')} <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500 italic font-serif normal-case tracking-normal">{t('about.title_alt')}</span>
                       </h2>
 
                       <p className="text-xl text-slate-500 leading-relaxed mb-12 font-light">
-                        Suministramos exclusivamente a talleres especializados desde hace más de 45 años.
-                        Basándonos en fórmulas probadas, producimos soluciones de alta calidad que
-                        optimizan la rentabilidad de su taller y la vida útil de cada vehículo.
+                        {t('about.desc')}
                       </p>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-10 mb-16">
                         {[
-                          { title: "Motores & Transmisión", items: ["Protección corrosión", "Limpieza FAP"] },
-                          { title: "Sistemas Térmicos", items: ["Sellado radiador", "Aire acondicionado"] },
-                          { title: "Dinámica & Frenado", items: ["Protección frenos", "Caja dirección"] },
-                          { title: "Mantenimiento", items: ["Fórmulas DCT", "Larga duración"] }
+                          { title: t('about.cat1'), items: ["Protección corrosión", "Limpieza FAP"] },
+                          { title: t('about.cat2'), items: ["Sellado radiador", "Aire acondicionado"] },
+                          { title: t('about.cat3'), items: ["Protección frenos", "Caja dirección"] },
+                          { title: t('about.cat4'), items: ["Fórmulas DCT", "Larga duración"] }
                         ].map((cat, idx) => (
                           <div key={idx} className="space-y-4">
                             <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-wepp-navy border-b border-slate-100 pb-2">{cat.title}</h4>
@@ -274,15 +284,14 @@ export default function App() {
 
                       <div className="bg-slate-50 p-10 rounded-[32px] border border-slate-100">
                         <p className="text-slate-500 text-sm leading-relaxed mb-8 font-medium">
-                          "Nuestros productos impulsan el éxito económico de nuestros clientes.
-                          Ofrecemos un concepto integral de consultoría y formación técnica avanzada."
+                          {t('about.quote')}
                         </p>
                         <div className="flex flex-wrap gap-8 items-center justify-between">
                           <button
                             onClick={() => setView('about')}
                             className="bg-wepp-navy hover:bg-wepp-red text-white px-10 py-5 font-black uppercase tracking-widest text-[10px] transition-all shadow-xl active:scale-95"
                           >
-                            Ver nuestra historia
+                            {t('about.cta')}
                           </button>
                           <div className="flex gap-4 opacity-30 grayscale items-center">
                             <span className="text-[10px] font-black uppercase tracking-widest">Europe</span>
@@ -314,34 +323,41 @@ export default function App() {
                 >
                   <div className="absolute inset-0 technical-grid opacity-10"></div>
                   <div className="relative z-10 grid lg:grid-cols-2 items-center">
-                    <div className="p-16 lg:p-24">
+                    <div className="p-8 sm:p-16 lg:p-24 relative z-20">
                       <div className="flex items-center gap-3 mb-8">
                         <div className="h-[2px] w-8 bg-wepp-red"></div>
-                        <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">Red de Talleres</span>
+                        <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('workshop.badge')}</span>
                       </div>
-                      <h2 className="text-5xl font-black text-white mb-8 uppercase tracking-tighter leading-none">
-                        ¿ERES UN TALLER <br /> PROFESIONAL?
+                      <h2 className="text-3xl sm:text-5xl font-black text-white mb-6 md:mb-8 uppercase tracking-tighter leading-none">
+                        {t('workshop.title')}
                       </h2>
-                      <p className="text-slate-400 text-lg mb-12 font-medium leading-relaxed">
-                        Únete a la red oficial WEPP España. Accede a formación técnica avanzada, herramientas de diagnóstico DCT y precios exclusivos de fábrica.
+                      <p className="text-slate-400 text-sm sm:text-lg mb-8 md:mb-12 font-medium leading-relaxed">
+                        {t('workshop.desc')}
                       </p>
                       <div className="flex flex-wrap gap-6">
-                        <button className="bg-wepp-red text-white px-10 py-5 rounded-none font-black uppercase tracking-widest text-xs hover:bg-red-700 transition-all shadow-xl shadow-wepp-red/20 active:scale-95">
-                          Registrar Taller
+                        <button
+                          onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
+                          className="bg-wepp-red text-white px-10 py-5 rounded-none font-black uppercase tracking-widest text-xs hover:bg-red-700 transition-all shadow-xl shadow-wepp-red/20 active:scale-95"
+                        >
+                          {t('workshop.cta1')}
                         </button>
-                        <button className="border border-white/20 text-white px-10 py-5 rounded-none font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all active:scale-95">
-                          Soporte Técnico
+                        <button
+                          onClick={() => document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })}
+                          className="border border-white/20 text-white px-10 py-5 rounded-none font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-all active:scale-95"
+                        >
+                          {t('workshop.cta2')}
                         </button>
                       </div>
                     </div>
-                    <div className="h-full min-h-[500px] relative overflow-hidden group">
+                    <div className="h-72 sm:h-96 lg:h-full lg:min-h-[600px] relative overflow-hidden group">
                       <img
-                        src="https://images.unsplash.com/photo-1632823471565-1ec2c63db7f5?auto=format&fit=crop&q=80&w=1000"
+                        src="/taller.jpg"
                         alt="Professional Workshop"
                         className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:scale-110 transition-transform duration-[2000ms]"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute inset-0 bg-gradient-to-l from-transparent to-wepp-navy lg:block hidden"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-wepp-navy via-transparent to-transparent lg:hidden block"></div>
                     </div>
                   </div>
                 </motion.div>
@@ -358,11 +374,11 @@ export default function App() {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className="h-[2px] w-8 bg-wepp-red"></div>
-                  <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">Catálogo Oficial</span>
+                  <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('products.badge')}</span>
                 </div>
                 <h2 className="text-5xl md:text-6xl font-black text-wepp-navy uppercase tracking-tighter leading-none">
-                  NUESTROS <br />
-                  <span className="text-wepp-red italic font-serif lowercase tracking-normal">productos.</span>
+                  {t('products.title')} <br />
+                  <span className="text-wepp-red italic font-serif lowercase tracking-normal">{t('products.title_alt')}</span>
                 </h2>
               </motion.div>
 
@@ -379,7 +395,7 @@ export default function App() {
                       : 'bg-white text-wepp-navy border-slate-200 hover:border-wepp-red'
                       }`}
                   >
-                    {cat}
+                    {cat === 'Todos' ? t('products.cat_all') : cat}
                   </motion.button>
                 ))}
               </div>
@@ -391,13 +407,14 @@ export default function App() {
               </div>
             </div>
           </section>
+        ) : view === 'about' ? (
+          <AboutPage setView={setView} />
         ) : (
-          <AboutPage />
+          <ContactSection />
         )}
       </main>
 
       <Footer setView={setView} />
     </div>
-
   );
 }

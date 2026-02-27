@@ -1,73 +1,123 @@
 import React from 'react';
 import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
 import { Logo } from './Logo';
+import { useLanguage } from '../services/LanguageContext';
 
 interface FooterProps {
-  setView: (view: 'home' | 'products' | 'about') => void;
+  setView: (view: 'home' | 'products' | 'about' | 'contact') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
+  const { t } = useLanguage();
   return (
-    <footer id="contacto" className="bg-wepp-dark text-white pt-32 pb-12 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
-          <div className="lg:col-span-1">
-            <Logo className="h-20 mb-10 inline-block" onClick={() => { setView('home'); window.scrollTo(0, 0); }} />
-            <p className="text-slate-400 text-sm leading-relaxed mb-10 font-medium max-w-xs">
-              Líderes mundiales en tecnología química para automoción. Ingeniería alemana aplicada al mantenimiento profesional.
-            </p>
-            <div className="flex gap-4">
-              <a href="#" className="p-4 bg-white/5 hover:bg-wepp-red rounded-2xl transition-all group"><Facebook className="w-5 h-5 group-hover:scale-110 transition-transform" /></a>
-              <a href="#" className="p-4 bg-white/5 hover:bg-wepp-red rounded-2xl transition-all group"><Instagram className="w-5 h-5 group-hover:scale-110 transition-transform" /></a>
-              <a href="#" className="p-4 bg-white/5 hover:bg-wepp-red rounded-2xl transition-all group"><Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" /></a>
+    <footer className="bg-wepp-dark text-white pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-wepp-red/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-20">
+
+          {/* Brand Column */}
+          <div className="lg:col-span-4 flex flex-col justify-between items-center md:items-start text-center md:text-left">
+            <div>
+              <Logo className="h-16 mb-8 inline-block" onClick={() => { setView('home'); window.scrollTo(0, 0); }} />
+              <p className="text-slate-400 text-sm leading-relaxed mb-8 font-medium max-w-xs mx-auto md:mx-0">
+                {t('footer.brand_desc')}
+              </p>
+            </div>
+            <div className="flex gap-4 justify-center md:justify-start">
+              {[Facebook, Instagram, Linkedin].map((Icon, i) => (
+                <a key={i} href="#" className="w-10 h-10 flex items-center justify-center bg-white/5 hover:bg-wepp-red rounded-xl transition-all group">
+                  <Icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                </a>
+              ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[10px] text-wepp-red">Sistemas DCT</h4>
-            <ul className="space-y-5 text-slate-400 text-xs font-black uppercase tracking-widest">
-              <li><button onClick={() => setView('products')} className="hover:text-white transition-colors flex items-center gap-2 group text-left">Catálogo Completo <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" /></button></li>
-              <li><button onClick={() => setView('products')} className="hover:text-white transition-colors flex items-center gap-2 group text-left">Inyección Diésel <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" /></button></li>
-              <li><button onClick={() => setView('products')} className="hover:text-white transition-colors flex items-center gap-2 group text-left">Sistemas Gasolina <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" /></button></li>
-              <li><button onClick={() => setView('products')} className="hover:text-white transition-colors flex items-center gap-2 group text-left">Lubricación Motor <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" /></button></li>
+          {/* Links Columns */}
+          <div className="lg:col-span-2 text-center md:text-left">
+            <h4 className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em] mb-8">{t('nav.products')}</h4>
+            <ul className="space-y-4 flex flex-col items-center md:items-start">
+              {['Catálogo', 'Inyección', 'Gasolina', 'Lubricación'].map((item) => (
+                <li key={item}>
+                  <button onClick={() => setView('products')} className="text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest flex items-center gap-2 group">
+                    {item} <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-all" />
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[10px] text-wepp-red">Corporativo</h4>
-            <ul className="space-y-5 text-slate-400 text-xs font-black uppercase tracking-widest">
-              <li><button onClick={() => setView('about')} className="hover:text-white transition-colors">Nuestra Historia</button></li>
-              <li><button onClick={() => { setView('home'); setTimeout(() => document.getElementById('talleres')?.scrollIntoView({ behavior: 'smooth' }), 100); }} className="hover:text-white transition-colors">Red de Talleres</button></li>
-              <li><button onClick={() => setView('about')} className="hover:text-white transition-colors">Filosofía WEPP</button></li>
-              <li><button onClick={() => setView('about')} className="hover:text-white transition-colors">Garantía Alemana</button></li>
+          <div className="lg:col-span-2 text-center md:text-left">
+            <h4 className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em] mb-8">{t('nav.about')}</h4>
+            <ul className="space-y-4 flex flex-col items-center md:items-start">
+              {['Historia', 'Talleres', 'Filosofía', 'Garantía'].map((item) => (
+                <li key={item}>
+                  <button onClick={() => setView('about')} className="text-slate-400 hover:text-white transition-colors text-xs font-bold uppercase tracking-widest">
+                    {item}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
-          <div>
-            <h4 className="font-black mb-10 uppercase tracking-[0.3em] text-[10px] text-wepp-red">Contacto Directo</h4>
-            <ul className="space-y-8 text-slate-400 text-sm font-bold">
-              <li className="flex items-start gap-4">
-                <MapPin className="w-5 h-5 text-wepp-red flex-shrink-0" />
-                <span className="leading-tight text-xs uppercase tracking-widest">Sede Central España <br />Madrid, 28001</span>
-              </li>
-              <li className="flex items-center gap-4">
-                <Phone className="w-5 h-5 text-wepp-red flex-shrink-0" />
-                <span className="text-xs uppercase tracking-widest">+34 912 345 678</span>
-              </li>
-              <li className="flex items-center gap-4">
-                <Mail className="w-5 h-5 text-wepp-red flex-shrink-0" />
-                <span className="text-xs uppercase tracking-widest">tecnico@wepp.es</span>
-              </li>
-            </ul>
+          {/* Official Provider Column - Compact & Elegant */}
+          <div className="lg:col-span-4">
+            <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative group overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-wepp-red/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-wepp-red/20 transition-colors"></div>
+
+              <div className="relative z-10 flex flex-col items-center md:items-start text-center md:text-left gap-6">
+                <div>
+                  <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-wepp-red animate-pulse"></div>
+                    <span className="text-wepp-red text-[9px] font-black uppercase tracking-[0.4em]">{t('footer.official_provider')}</span>
+                  </div>
+                  <h5 className="text-xl font-black text-white uppercase tracking-tight mb-2">Michael Leffler</h5>
+                  <div className="flex items-start justify-center md:justify-start gap-3">
+                    <MapPin className="w-4 h-4 text-wepp-red shrink-0 mt-0.5" />
+                    <p className="text-slate-500 text-[10px] leading-relaxed font-bold uppercase tracking-widest">
+                      Edif. Peones Camineros<br />
+                      P. A, 2ª izq · 11158<br />
+                      Barca de Vejer, Cádiz
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-3 pt-6 border-t border-white/5 w-full flex flex-col items-center md:items-start">
+                  <a href="tel:+34640074441" className="flex items-center gap-3 group/link">
+                    <div className="w-8 h-8 rounded-lg bg-wepp-red/10 flex items-center justify-center group-hover/link:bg-wepp-red transition-colors">
+                      <Phone className="w-3.5 h-3.5 text-wepp-red group-hover/link:text-white" />
+                    </div>
+                    <span className="text-xs font-black tracking-widest text-slate-300 group-hover/link:text-white transition-colors">+34 640 074 441</span>
+                  </a>
+                  <a href="mailto:tecnico@wepp.es" className="flex items-center gap-3 group/link">
+                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover/link:bg-wepp-red transition-colors">
+                      <Mail className="w-3.5 h-3.5 text-wepp-red group-hover/link:text-white" />
+                    </div>
+                    <span className="text-xs font-black tracking-widest text-slate-300 group-hover/link:text-white transition-colors">TECNICO@WEPP.ES</span>
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
 
-        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.3em] text-slate-600">
-          <p>© 2024 WEPP ESPAÑA - GERMAN PRECISION TECHNOLOGY</p>
+        {/* Footer Bottom */}
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
+          <p className="text-slate-600 text-[9px] font-black uppercase tracking-[0.4em]">
+            © {new Date().getFullYear()} WEPP ESPAÑA · GERMAN TECHNOLOGY
+          </p>
           <div className="flex gap-10">
-            <a href="#" className="hover:text-white transition-colors">Aviso Legal</a>
-            <a href="#" className="hover:text-white transition-colors">Privacidad</a>
-            <a href="#" className="hover:text-white transition-colors">Cookies</a>
+            {[
+              { label: t('footer.legal'), href: '#' },
+              { label: t('footer.privacy'), href: '#' },
+              { label: t('footer.cookies'), href: '#' }
+            ].map(link => (
+              <a key={link.label} href={link.href} className="text-slate-600 hover:text-white transition-colors text-[9px] font-black uppercase tracking-[0.4em]">
+                {link.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>

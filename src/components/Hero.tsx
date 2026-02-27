@@ -1,12 +1,14 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { ChevronRight, Play, ShieldCheck, Zap, Gauge } from 'lucide-react';
+import { ChevronRight, Play } from 'lucide-react';
+import { useLanguage } from '../services/LanguageContext';
 
 interface HeroProps {
-  setView: (view: 'home' | 'products') => void;
+  setView: (view: 'home' | 'products' | 'contact') => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ setView }) => {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -55,51 +57,29 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           <div className="lg:col-span-12">
-            <div className="overflow-hidden mb-10">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-wepp-red opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-wepp-red"></span>
-                </span>
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-300">
-                  German Precision Engineering
-                </span>
-              </motion.div>
-            </div>
+
 
             <motion.div
-              initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-              className="relative z-10 mb-12"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-10 mb-6 md:mb-12 pt-10 md:pt-0"
             >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="h-[1px] w-12 bg-wepp-red"></div>
-                <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.5em]">Global Excellence</span>
-              </div>
-
-              <h1 className="text-5xl sm:text-7xl md:text-[110px] font-black text-white leading-[0.85] tracking-tighter uppercase mb-12">
-                COCHES <span className="text-transparent bg-clip-text bg-gradient-to-tr from-white to-white/40 italic font-serif normal-case tracking-normal">mejores.</span><br />
-                TALLERES <span className="text-wepp-red italic font-serif normal-case tracking-normal relative">
-                  exitosos.
+              <h1 className="text-[2.75rem] leading-[0.95] sm:text-6xl md:text-[110px] font-black text-white tracking-tighter uppercase mb-6 md:mb-12">
+                {t('hero.title1')} <span className="text-transparent bg-clip-text bg-gradient-to-tr from-white to-white/30 italic font-serif normal-case tracking-normal text-[3rem] sm:text-7xl md:text-[120px]">{t('hero.title1_alt')}</span><br />
+                {t('hero.title2')} <span className="text-wepp-red italic font-serif normal-case tracking-normal relative text-[3rem] sm:text-7xl md:text-[120px] inline-block">
+                  {t('hero.title2_alt')}
                   <motion.span
                     initial={{ width: 0 }}
                     animate={{ width: '100%' }}
-                    transition={{ delay: 1, duration: 1 }}
-                    className="absolute bottom-4 left-0 h-[2px] bg-wepp-red/30 block"
+                    transition={{ delay: 1, duration: 1.5 }}
+                    className="absolute bottom-1 md:bottom-4 left-0 h-[2px] md:h-[3px] bg-wepp-red/40 block"
                   />
                 </span>
               </h1>
 
-              <p className="text-lg md:text-xl text-slate-400 max-w-xl leading-relaxed font-light border-l-2 border-wepp-red/20 pl-8">
-                Productos químicos y técnicos para todo lo que hace que su coche funcione mejor,
-                durante más tiempo y de forma más limpia:
-                <span className="text-white font-medium"> ese es nuestro punto fuerte.</span>
+              <p className="text-sm sm:text-lg md:text-xl text-slate-300 max-w-xl leading-relaxed font-light border-l-2 border-wepp-red/30 pl-4 md:pl-8 drop-shadow-lg">
+                {t('hero.desc')}
               </p>
             </motion.div>
 
@@ -111,21 +91,24 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
             >
               <button
                 onClick={() => setView('products')}
-                className="group relative px-8 md:px-12 py-5 md:py-7 overflow-hidden transition-all hover:scale-105 active:scale-95 w-full sm:w-auto"
+                className="group relative px-6 md:px-12 py-4 md:py-7 overflow-hidden transition-all hover:scale-105 active:scale-95 w-full sm:w-auto rounded-lg md:rounded-none"
               >
                 <div className="absolute inset-0 bg-wepp-red transition-all group-hover:bg-red-700"></div>
-                <div className="relative flex items-center justify-center gap-3 text-white font-black uppercase tracking-widest text-xs md:text-sm">
-                  Explorar Catálogo
+                <div className="relative flex items-center justify-center gap-3 text-white font-black uppercase tracking-widest text-[11px] md:text-sm">
+                  {t('hero.cta_products')}
                   <ChevronRight className="w-4 md:w-5 h-4 md:h-5 group-hover:translate-x-1 transition-transform" />
                 </div>
               </button>
 
-              <button className="group relative px-8 md:px-12 py-5 md:py-7 overflow-hidden border border-white/10 backdrop-blur-xl transition-all hover:bg-white/5 w-full sm:w-auto">
-                <div className="relative flex items-center justify-center gap-3 text-white font-black uppercase tracking-widest text-xs md:text-sm">
+              <button
+                onClick={() => document.getElementById('tecnologia')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group relative px-6 md:px-12 py-4 md:py-7 overflow-hidden border border-white/20 backdrop-blur-xl transition-all hover:bg-white/10 w-full sm:w-auto rounded-lg md:rounded-none"
+              >
+                <div className="relative flex items-center justify-center gap-3 text-white font-black uppercase tracking-widest text-[11px] md:text-sm">
                   <div className="w-6 md:w-8 h-6 md:h-8 rounded-full bg-wepp-red/20 flex items-center justify-center group-hover:bg-wepp-red/40 transition-colors">
                     <Play className="w-3 h-3 fill-wepp-red text-wepp-red" />
                   </div>
-                  Ver Tecnología
+                  {t('hero.cta_tech')}
                 </div>
               </button>
             </motion.div>

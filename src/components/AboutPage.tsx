@@ -1,26 +1,33 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'motion/react';
 import { ShieldCheck, History, Globe, Zap, Heart, Award, Beaker, CheckCircle2, Star, Users } from 'lucide-react';
+import { useLanguage } from '../services/LanguageContext';
 
-const timelineData = [
-    { year: "1971", title: "Fundación", desc: "Knut Behrens funda una agencia de ventas de productos químico-técnicos en Aschaffenburg, Baviera. Introducción de aditivos profesionales para talleres." },
-    { year: "1974", title: "Era TUNAP", desc: "Socio fundador de TUNAP. Desarrollo de conceptos de marketing y expansión de la red de venta directa en Europa." },
-    { year: "1996", title: "Nueva Etapa", desc: "Knut Behrens abandona TUNAP tras 25 años para iniciar un proyecto independiente y familiar." },
-    { year: "1998", title: "Nacimiento de WEPP", desc: "Fundación de Werkstatt Profi Programm GmbH y registro mundial de la marca WEPP. Nacimiento de BELISSIMO GmbH en Suiza." },
-    { year: "1999", title: "Expansión Benelux", desc: "Fundación de INNOVENTE TECHNIEK BV para distribución en Holanda, Bélgica, Luxemburgo y Gran Bretaña." },
-    { year: "2000", title: "Regreso a Aschaffenburg", desc: "La sede central de WEPP GmbH se traslada a su ciudad de origen." },
-    { year: "2003", title: "Segunda Generación", desc: "Tim Behrens se incorpora a WEPP GmbH, reforzando el carácter familiar de la empresa." },
-    { year: "2007", title: "Liderazgo Renovado", desc: "Tim Behrens es nombrado Director General. Inicio de operaciones en Polonia." },
-    { year: "2010", title: "Automechanika", desc: "Primera participación en Automechanika Frankfurt. Expansión a Grecia y Balcanes." },
-    { year: "2012", title: "Innovación WEPP 2232", desc: "Presentación del revolucionario sistema de limpieza de filtros de partículas (DPF) en Frankfurt." },
-    { year: "2014", title: "Certificación TÜV", desc: "TÜV Thüringen certifica la eficacia de WEPP 2032 y 2036. Inicio de la construcción de la nueva sede." },
-    { year: "2015", title: "Nueva Sede Central", desc: "Mudanza a las modernas instalaciones de Großenlüder-Bimbach. Expansión a Marruecos." },
-    { year: "2016", title: "Homologación BMW", desc: "Listado oficial del limpiador de filtros DPF en BMW. Alianzas de I+D con universidades alemanas." },
-    { year: "2018", title: "Presencia Global", desc: "Logros en Automechanika Frankfurt con nuevos socios en Indonesia e Irak. Expansión a Tanzania y Kazajistán." }
-];
+interface AboutPageProps {
+    setView: (view: 'home' | 'products' | 'about' | 'contact') => void;
+}
 
-export const AboutPage: React.FC = () => {
+export const AboutPage: React.FC<AboutPageProps> = ({ setView }) => {
+    const { t } = useLanguage();
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const timelineData = [
+        { year: "1971", title: t('timeline.1971.title'), desc: t('timeline.1971.desc') },
+        { year: "1974", title: t('timeline.1974.title'), desc: t('timeline.1974.desc') },
+        { year: "1996", title: t('timeline.1996.title'), desc: t('timeline.1996.desc') },
+        { year: "1998", title: t('timeline.1998.title'), desc: t('timeline.1998.desc') },
+        { year: "1999", title: t('timeline.1999.title'), desc: t('timeline.1999.desc') },
+        { year: "2000", title: t('timeline.2000.title'), desc: t('timeline.2000.desc') },
+        { year: "2003", title: t('timeline.2003.title'), desc: t('timeline.2003.desc') },
+        { year: "2007", title: t('timeline.2007.title'), desc: t('timeline.2007.desc') },
+        { year: "2010", title: t('timeline.2010.title'), desc: t('timeline.2010.desc') },
+        { year: "2012", title: t('timeline.2012.title'), desc: t('timeline.2012.desc') },
+        { year: "2014", title: t('timeline.2014.title'), desc: t('timeline.2014.desc') },
+        { year: "2015", title: t('timeline.2015.title'), desc: t('timeline.2015.desc') },
+        { year: "2016", title: t('timeline.2016.title'), desc: t('timeline.2016.desc') },
+        { year: "2018", title: t('timeline.2018.title'), desc: t('timeline.2018.desc') },
+        { year: "2024", title: t('timeline.2024.title'), desc: t('timeline.2024.desc') }
+    ];
     const { scrollYProgress } = useScroll({
         target: containerRef,
         offset: ["start start", "end end"]
@@ -51,7 +58,7 @@ export const AboutPage: React.FC = () => {
                         animate={{ opacity: 1, y: 0 }}
                         className="inline-block px-4 py-1.5 rounded-full bg-wepp-red/10 border border-wepp-red/20 mb-6 md:mb-8"
                     >
-                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] text-wepp-red italic">Pasión por el éxito</span>
+                        <span className="text-[8px] md:text-[10px] font-black uppercase tracking-[0.4em] text-wepp-red italic">{t('about_page.hero_badge')}</span>
                     </motion.div>
                     <motion.h1
                         initial={{ opacity: 0, y: 30 }}
@@ -59,11 +66,11 @@ export const AboutPage: React.FC = () => {
                         transition={{ duration: 1, delay: 0.2 }}
                         className="text-4xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter leading-none mb-6 md:mb-8"
                     >
-                        APOYANDO AL TALLER <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500 italic pb-2">DESDE 1971.</span>
+                        {t('about_page.hero_title')} <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500 italic pb-2">{t('about_page.hero_title_alt')}</span>
                     </motion.h1>
                     <p className="text-lg md:text-2xl text-slate-400 font-light max-w-3xl mx-auto leading-relaxed">
-                        Hacer que los vehículos funcionen mejor y apoyar a los talleres en su éxito: nuestro objetivo durante más de 45 años.
+                        {t('about_page.hero_desc')}
                     </p>
                 </div>
             </section>
@@ -81,22 +88,22 @@ export const AboutPage: React.FC = () => {
                             <div className="space-y-6">
                                 <div className="flex items-center gap-3">
                                     <div className="h-[2px] w-8 bg-wepp-red"></div>
-                                    <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">ADN Corporativo</span>
+                                    <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('about_page.mission_badge')}</span>
                                 </div>
                                 <h2 className="text-5xl font-black text-wepp-navy uppercase tracking-tighter leading-none">
-                                    EXPERTOS PARA <br /> <span className="text-wepp-red italic">PROFESIONALES.</span>
+                                    {t('about_page.mission_title')} <br /> <span className="text-wepp-red italic">{t('about_page.mission_title_alt')}</span>
                                 </h2>
                                 <p className="text-slate-600 text-lg leading-relaxed font-medium">
-                                    Nos ocupamos exclusivamente de productos técnicos y químicos para talleres especializados. Esta especialización nos ha convertido en verdaderos expertos en el campo de la automoción profesional.
+                                    {t('about_page.mission_desc')}
                                 </p>
                             </div>
 
                             <div className="grid sm:grid-cols-2 gap-8">
                                 {[
-                                    { icon: Users, title: "Empresa Familiar", desc: "El apellido Behrens es sinónimo de calidad, fiabilidad y pasión." },
-                                    { icon: Star, title: "Visión Global", desc: "Crecimiento constante en Europa, Asia Oriental y el Norte de África." },
-                                    { icon: CheckCircle2, title: "Calidad Absoluta", desc: "Trabajamos exclusivamente con talleres independientes y concesionarios." },
-                                    { icon: ShieldCheck, title: "Fabricado en Alemania", desc: "Todos nuestros productos se desarrollan y fabrican íntegramente en Alemania." }
+                                    { icon: Users, title: t('about_page.feature1_title'), desc: t('about_page.feature1_desc') },
+                                    { icon: Star, title: t('about_page.feature2_title'), desc: t('about_page.feature2_desc') },
+                                    { icon: CheckCircle2, title: t('about_page.feature3_title'), desc: t('about_page.feature3_desc') },
+                                    { icon: ShieldCheck, title: t('about_page.feature4_title'), desc: t('about_page.feature4_desc') }
                                 ].map((item, idx) => (
                                     <div key={idx} className="space-y-3">
                                         <item.icon className="w-8 h-8 text-wepp-red" />
@@ -117,15 +124,15 @@ export const AboutPage: React.FC = () => {
                             <div className="relative z-10 space-y-8 md:space-y-10">
                                 <div className="flex items-center gap-3">
                                     <Beaker className="text-wepp-red w-5 h-5 md:w-6 md:h-6" />
-                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/60">Objetivos de Marca</span>
+                                    <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.3em] text-white/60">{t('about_page.goals_badge')}</span>
                                 </div>
-                                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic text-wepp-red">La Receta del Éxito</h3>
+                                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tighter italic text-wepp-red">{t('about_page.goals_title')}</h3>
                                 <ul className="space-y-6 md:space-y-8">
                                     {[
-                                        { t: "Innovación para Mecánicos", d: "Productos innovadores de alta calidad diseñados por y para el profesional del automóvil." },
-                                        { t: "Valor Óptimo", d: "Mantenemos una relación precio-rendimiento líder en el mercado internacional." },
-                                        { t: "Sostenibilidad Real", d: "Desarrollo y distribución de productos respetuosos con el medio ambiente." },
-                                        { t: "Salud del Profesional", d: "Evitamos el uso de materias primas tóxicas y cancerígenas para proteger la salud de los mecánicos." }
+                                        { t: t('about_page.goal1_title'), d: t('about_page.goal1_desc') },
+                                        { t: t('about_page.goal2_title'), d: t('about_page.goal2_desc') },
+                                        { t: t('about_page.goal3_title'), d: t('about_page.goal3_desc') },
+                                        { t: t('about_page.goal4_title'), d: t('about_page.goal4_desc') }
                                     ].map((obj, i) => (
                                         <li key={i} className="flex gap-4 md:gap-6 group">
                                             <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-wepp-red transition-colors">
@@ -150,9 +157,9 @@ export const AboutPage: React.FC = () => {
                     <div className="text-center mb-24">
                         <div className="flex items-center justify-center gap-3 mb-4">
                             <History className="text-wepp-red w-6 h-6" />
-                            <span className="text-wepp-navy text-[10px] font-black uppercase tracking-[0.4em]">Trayectoria Histórica</span>
+                            <span className="text-wepp-navy text-[10px] font-black uppercase tracking-[0.4em]">{t('about_page.history_badge')}</span>
                         </div>
-                        <h2 className="text-5xl md:text-7xl font-black text-wepp-navy uppercase tracking-tighter">NUESTRO <span className="text-wepp-red italic">LEGADO.</span></h2>
+                        <h2 className="text-5xl md:text-7xl font-black text-wepp-navy uppercase tracking-tighter">{t('about_page.history_title')} <span className="text-wepp-red italic">{t('about_page.history_title_alt')}</span></h2>
                     </div>
 
                     <div className="relative">
@@ -197,13 +204,13 @@ export const AboutPage: React.FC = () => {
                 </div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
                     <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-tight mb-12">
-                        PRESENCIA EN MÁS DE <span className="text-wepp-red italic">30 PAÍSES.</span>
+                        {t('about_page.presence_title')} <span className="text-wepp-red italic">{t('about_page.presence_title_alt')}</span>
                     </h2>
                     <div className="grid md:grid-cols-3 gap-12">
                         {[
-                            { label: "Experiencia", val: "45+", sub: "Años en el mercado" },
-                            { label: "Formación", val: "100%", sub: "Servicio técnico integral" },
-                            { label: "Soluciones", val: "DCT", sub: "Tecnología de última generación" }
+                            { label: t('about_page.stat1_label'), val: "45+", sub: t('about_page.stat1_sub') },
+                            { label: t('about_page.stat2_label'), val: "100%", sub: t('about_page.stat2_sub') },
+                            { label: t('about_page.stat3_label'), val: "DCT", sub: t('about_page.stat3_sub') }
                         ].map((stat, i) => (
                             <div key={i} className="glass-panel p-10 rounded-3xl border-white/5">
                                 <p className="text-5xl font-black italic text-wepp-red mb-2">{stat.val}</p>
@@ -213,7 +220,7 @@ export const AboutPage: React.FC = () => {
                         ))}
                     </div>
                     <p className="mt-20 text-slate-400 max-w-4xl mx-auto text-lg leading-relaxed italic">
-                        "Ya sea mantenimiento, protección, limpieza, lubricación o unión: WEPP ofrece una calidad excepcional, asesoramiento especializado y un servicio integral para sus clientes."
+                        {t('about_page.final_quote')}
                     </p>
                 </div>
             </section>
@@ -222,14 +229,20 @@ export const AboutPage: React.FC = () => {
             <section className="py-20 md:py-32 bg-white text-center">
                 <div className="max-w-4xl mx-auto px-4">
                     <h2 className="text-4xl md:text-8xl font-black text-wepp-navy uppercase tracking-tighter leading-none mb-10 md:mb-12">
-                        EL ÉXITO ES <br /> <span className="text-wepp-red italic">CUESTIÓN DE CALIDAD.</span>
+                        {t('about_page.final_title')} <br /> <span className="text-wepp-red italic">{t('about_page.final_title_alt')}</span>
                     </h2>
                     <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-8">
-                        <button className="bg-wepp-navy hover:bg-wepp-red text-white px-8 md:px-12 py-5 md:py-6 font-black uppercase tracking-widest text-xs md:text-sm transition-all shadow-xl active:scale-95 w-full sm:w-auto">
-                            Contactar con Expertos
+                        <button
+                            onClick={() => setView('contact')}
+                            className="bg-wepp-navy hover:bg-wepp-red text-white px-8 md:px-12 py-5 md:py-6 font-black uppercase tracking-widest text-xs md:text-sm transition-all shadow-xl active:scale-95 w-full sm:w-auto"
+                        >
+                            {t('about_page.final_cta1')}
                         </button>
-                        <button className="border-2 border-wepp-navy text-wepp-navy hover:bg-wepp-navy hover:text-white px-8 md:px-12 py-5 md:py-6 font-black uppercase tracking-widest text-xs md:text-sm transition-all active:scale-95 w-full sm:w-auto">
-                            Catálogo Profesional
+                        <button
+                            onClick={() => setView('products')}
+                            className="border-2 border-wepp-navy text-wepp-navy hover:bg-wepp-navy hover:text-white px-8 md:px-12 py-5 md:py-6 font-black uppercase tracking-widest text-xs md:text-sm transition-all active:scale-95 w-full sm:w-auto"
+                        >
+                            {t('about_page.final_cta2')}
                         </button>
                     </div>
                 </div>
