@@ -19,55 +19,55 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-contain p-12 group-hover:scale-110 transition-transform duration-1000"
+          className="w-full h-full object-contain p-4 md:p-12 group-hover:scale-110 transition-transform duration-1000"
           referrerPolicy="no-referrer"
         />
 
         {/* Overlay with details on hover */}
-        <div className="absolute inset-0 bg-wepp-dark/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-center p-10">
-          <div className="space-y-4">
+        <div className="absolute inset-0 bg-wepp-dark/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-center p-6 md:p-10">
+          <div className="space-y-2 md:space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-1 w-6 bg-wepp-red"></div>
-              <span className="text-wepp-red text-[10px] font-black uppercase tracking-widest">Especificaciones</span>
+              <span className="text-wepp-red text-[8px] md:text-[10px] font-black uppercase tracking-widest">Especificaciones</span>
             </div>
-            <p className="text-white text-sm leading-relaxed font-light">
+            <p className="text-white text-[10px] md:text-sm leading-relaxed font-light line-clamp-4 md:line-clamp-none">
               {product.description}
             </p>
-            <button className="text-white font-black text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 pt-4 border-b border-white/20 pb-2 hover:border-wepp-red transition-colors">
-              Ficha Técnica <ArrowUpRight className="w-4 h-4" />
+            <button className="text-white font-black text-[8px] md:text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 pt-2 md:pt-4 border-b border-white/20 pb-2 hover:border-wepp-red transition-colors">
+              Ficha Técnica <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
             </button>
           </div>
         </div>
 
         {/* Badge */}
         <div className="absolute top-6 left-6">
-          <span className="bg-wepp-navy text-white text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
+          <span className="bg-wepp-navy text-white text-[7px] md:text-[8px] font-black px-2 md:px-3 py-1 rounded-full uppercase tracking-widest">
             {product.category}
           </span>
         </div>
 
         {/* Product ID */}
         <div className="absolute bottom-6 right-6">
-          <span className="text-slate-200 text-6xl font-black tracking-tighter opacity-50 group-hover:opacity-0 transition-opacity">
+          <span className="hidden md:block text-slate-200 text-6xl font-black tracking-tighter opacity-50 group-hover:opacity-0 transition-opacity">
             {product.id}
           </span>
         </div>
       </div>
 
-      <div className="p-10">
-        <h3 className="font-black text-2xl leading-tight text-wepp-navy uppercase tracking-tighter mb-6 group-hover:text-wepp-red transition-colors">
+      <div className="p-4 md:p-10">
+        <h3 className="font-black text-sm md:text-2xl leading-tight text-wepp-navy uppercase tracking-tighter mb-4 md:mb-6 group-hover:text-wepp-red transition-colors min-h-[2.5rem] md:min-h-0 line-clamp-2 md:line-clamp-none">
           {product.name}
         </h3>
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Referencia</span>
-            <span className="text-wepp-navy text-xl font-black tracking-tighter">
+            <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 md:mb-1">Referencia</span>
+            <span className="text-wepp-navy text-xs md:text-xl font-black tracking-tighter">
               Art. Nr. {product.id}
             </span>
           </div>
-          <button className="text-wepp-red font-black text-[10px] uppercase tracking-widest flex items-center gap-2 group-hover:gap-4 transition-all">
-            Ver Detalles <ArrowUpRight className="w-4 h-4" />
+          <button className="text-wepp-red font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+            <span className="hidden xs:inline">Ver Detalles</span> <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
           </button>
         </div>
       </div>
