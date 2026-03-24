@@ -20,7 +20,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           {/* Brand Column */}
           <div className="lg:col-span-4 flex flex-col justify-between items-center md:items-start text-center md:text-left">
             <div>
-              <Logo className="h-16 mb-8 inline-block" onClick={() => { setView('home'); window.scrollTo(0, 0); }} />
+              <Logo className="h-10 mb-8 inline-block" onClick={() => { setView('home'); window.scrollTo(0, 0); }} />
               <p className="text-slate-400 text-sm leading-relaxed mb-8 font-medium max-w-xs mx-auto md:mx-0">
                 {t('footer.brand_desc')}
               </p>
