@@ -128,7 +128,7 @@ export const Navbar: React.FC<NavbarProps> = ({ setView, currentView, onSearch }
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             <div className="flex items-center gap-12">
-              <Logo className="h-20 md:h-25" onClick={() => scrollToSection('hero')} />
+              <Logo className="h-12 md:h-16" onClick={() => scrollToSection('hero')} />
               <div className="hidden lg:flex items-center gap-10">
                 <button
                   onClick={() => scrollToSection('hero')}
@@ -275,7 +275,7 @@ export const Navbar: React.FC<NavbarProps> = ({ setView, currentView, onSearch }
             {/* Mobile Header - Larger Logo */}
             <div className="bg-transparent border-b border-white/5">
               <div className="h-20 sm:h-24 px-6 flex items-center justify-between">
-                <Logo className="h-16 sm:h-20" onClick={() => { setView('home'); setIsMenuOpen(false); }} />
+                <Logo className="h-10 sm:h-12" onClick={() => { setView('home'); setIsMenuOpen(false); }} />
                 <button
                   className="p-3 text-white hover:text-wepp-red transition-all"
                   onClick={() => setIsMenuOpen(false)}

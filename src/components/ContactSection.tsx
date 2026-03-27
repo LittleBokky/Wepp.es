@@ -100,7 +100,7 @@ export const ContactSection: React.FC = () => {
                         </div>
 
                         <div className="mt-12 pt-12 border-t border-slate-100">
-                            <Logo className="h-12 opacity-40 grayscale" />
+                            <Logo className="h-8 opacity-40 grayscale" />
                             <p className="text-[9px] font-black uppercase tracking-[0.4em] text-slate-400 mt-4 text-center lg:text-left">
                                 {t('contact.footer_note')}
                             </p>
