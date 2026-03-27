@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductCard } from './components/ProductCard';
-import { AIAdvisor } from './components/AIAdvisor';
+
 import { Footer } from './components/Footer';
 import { AboutPage } from './components/AboutPage';
 import { ContactSection } from './components/ContactSection';
@@ -59,65 +59,6 @@ function AppContent() {
               <Hero setView={setView} />
             </div>
 
-            {/* Trust Bar - Refined Brand Marquee */}
-            <div className="bg-white border-y border-slate-50 py-10 relative overflow-hidden group">
-              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-              <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-                <div className="flex items-center gap-4 opacity-60">
-                  <span className="text-[9px] font-black uppercase tracking-[0.5em] text-wepp-navy">{t('tech.badge')}</span>
-                  <div className="h-[1px] flex-grow bg-slate-100"></div>
-                </div>
-              </div>
-
-              <div className="flex overflow-hidden">
-                <motion.div
-                  animate={{ x: [0, -1000] }}
-                  transition={{
-                    duration: 40,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="flex gap-20 md:gap-40 items-center whitespace-nowrap px-10"
-                >
-                  {[
-                    'MERCEDES-BENZ', 'BMW GROUP', 'AUDI AG', 'PORSCHE', 'VOLKSWAGEN',
-                    'MERCEDES-BENZ', 'BMW GROUP', 'AUDI AG', 'PORSCHE', 'VOLKSWAGEN'
-                  ].map((brand, i) => (
-                    <span
-                      key={`${brand}-${i}`}
-                      className="text-sm md:text-lg font-black tracking-[0.1em] text-slate-400 hover:text-wepp-red transition-colors duration-500 cursor-default select-none"
-                    >
-                      {brand}
-                    </span>
-                  ))}
-                </motion.div>
-
-                {/* Second copy for infinite effect */}
-                <motion.div
-                  animate={{ x: [0, -1000] }}
-                  transition={{
-                    duration: 40,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="flex gap-20 md:gap-40 items-center whitespace-nowrap px-10"
-                >
-                  {[
-                    'MERCEDES-BENZ', 'BMW GROUP', 'AUDI AG', 'PORSCHE', 'VOLKSWAGEN',
-                    'MERCEDES-BENZ', 'BMW GROUP', 'AUDI AG', 'PORSCHE', 'VOLKSWAGEN'
-                  ].map((brand, i) => (
-                    <span
-                      key={`${brand}-copy-${i}`}
-                      className="text-sm md:text-lg font-black tracking-[0.1em] text-slate-400 hover:text-wepp-red transition-colors duration-500 cursor-default select-none"
-                    >
-                      {brand}
-                    </span>
-                  ))}
-                </motion.div>
-              </div>
-            </div>
 
             {/* Technology Section - Bento Grid */}
             <section id="tecnologia" className="py-32 bg-wepp-silver overflow-hidden">
@@ -311,10 +252,6 @@ function AppContent() {
               </div>
             </section>
 
-            {/* AI Advisor Section */}
-            <div className="relative overflow-hidden">
-              <AIAdvisor />
-            </div>
 
             {/* Workshop Section */}
             <section id="talleres" className="py-32 bg-wepp-silver overflow-hidden">

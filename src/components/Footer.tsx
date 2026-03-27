@@ -73,14 +73,6 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                     <span className="text-wepp-red text-[9px] font-black uppercase tracking-[0.4em]">{t('footer.official_provider')}</span>
                   </div>
                   <h5 className="text-xl font-black text-white uppercase tracking-tight mb-2">Michael Leffler</h5>
-                  <div className="flex items-start justify-center md:justify-start gap-3">
-                    <MapPin className="w-4 h-4 text-wepp-red shrink-0 mt-0.5" />
-                    <p className="text-slate-500 text-[10px] leading-relaxed font-bold uppercase tracking-widest">
-                      Edif. Peones Camineros<br />
-                      P. A, 2ª izq · 11158<br />
-                      Barca de Vejer, Cádiz
-                    </p>
-                  </div>
                 </div>
 
                 <div className="space-y-3 pt-6 border-t border-white/5 w-full flex flex-col items-center md:items-start">
