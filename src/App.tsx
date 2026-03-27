@@ -11,6 +11,8 @@ import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu } from 'lucide-react'
 import { motion } from 'motion/react';
 
 import { LanguageProvider, useLanguage } from './services/LanguageContext';
+import { ref, set, onValue } from 'firebase/database';
+import { db } from './services/firebase';
 
 export default function App() {
   return (
@@ -25,7 +27,36 @@ function AppContent() {
   const [view, setView] = useState<'home' | 'products' | 'about' | 'contact'>('home');
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [firebaseProducts, setFirebaseProducts] = useState<any[]>(PRODUCTS);
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
+
+  const [testData, setTestData] = useState<string>('Cargando...');
+
+  useEffect(() => {
+    // Escuchar cambios
+    const testRef = ref(db, 'test_connection');
+    const unsubscribe = onValue(testRef, (snapshot) => {
+      const data = snapshot.val();
+      setTestData(data || 'No hay datos');
+    });
+
+    // Escribir un dato de prueba
+    set(testRef, "Conexión exitosa a la base de datos! " + new Date().toLocaleTimeString());
+
+    // Cargar productos de Firebase
+    const productsRef = ref(db, 'products');
+    const unsubscribeProducts = onValue(productsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setFirebaseProducts(data);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+      unsubscribeProducts();
+    };
+  }, []);
 
   // Scroll to top when view changes
   useEffect(() => {
@@ -40,7 +71,7 @@ function AppContent() {
     }
   };
 
-  const filteredProducts = PRODUCTS.filter(p => {
+  const filteredProducts = firebaseProducts.filter(p => {
     const matchesCategory = activeCategory === 'Todos' || p.category === activeCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -57,6 +88,13 @@ function AppContent() {
           <>
             <div id="hero">
               <Hero setView={setView} />
+            </div>
+
+            {/* Test Firebase Connection */}
+            <div className="bg-emerald-500/10 border-y border-emerald-500/20 py-2 text-center">
+              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
+                📡 Firebase: {testData}
+              </p>
             </div>
 
 
