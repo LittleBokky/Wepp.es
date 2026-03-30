@@ -6,9 +6,11 @@ import { ProductCard } from './components/ProductCard';
 import { Footer } from './components/Footer';
 import { AboutPage } from './components/AboutPage';
 import { ContactSection } from './components/ContactSection';
-import { PRODUCTS } from './types';
+import { PRODUCTS, Order, Salesperson } from './types';
 import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu } from 'lucide-react';
 import { motion } from 'motion/react';
+import { AdminPortal } from './components/AdminPortal';
+
 
 import { LanguageProvider, useLanguage } from './services/LanguageContext';
 import { ref, set, onValue } from 'firebase/database';
@@ -24,8 +26,9 @@ export default function App() {
 
 function AppContent() {
   const { t } = useLanguage();
-  const [view, setView] = useState<'home' | 'products' | 'about' | 'contact'>('home');
+  const [view, setView] = useState<'home' | 'products' | 'about' | 'contact' | 'admin'>('home');
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [firebaseProducts, setFirebaseProducts] = useState<any[]>(PRODUCTS);
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
@@ -389,10 +392,18 @@ function AppContent() {
           </section>
         ) : view === 'about' ? (
           <AboutPage setView={setView} />
-        ) : (
+        ) : view === 'contact' ? (
           <ContactSection />
+        ) : (
+          <AdminPortal 
+            products={firebaseProducts} 
+            setProducts={setFirebaseProducts} 
+            onClose={() => setView('home')} 
+          />
         )}
+
       </main>
+
 
       <Footer setView={setView} />
     </div>

@@ -230,3 +230,41 @@ export const PRODUCTS: Product[] = [
     features: ['Sellado interno', 'Alta penetración', 'Previene el óxido']
   }
 ];
+
+export interface Order {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  items: {
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+  }[];
+  total: number;
+  status: 'Pendiente' | 'Procesando' | 'Enviado' | 'Entregado' | 'Cancelado';
+  date: string;
+  salespersonId?: string;
+  shippingAddress: string;
+}
+
+export interface Salesperson {
+  id: string;
+  name: string;
+  email: string;
+  region: string;
+  commissions: number;
+  totalSales: number;
+  status: 'Activo' | 'Inactivo';
+  joinDate: string;
+}
+
+export interface AdminStats {
+  totalRevenue: number;
+  totalOrders: number;
+  activeSalespeople: number;
+  inventoryValue: number;
+  salesGrowth: number;
+  recentOrders: Order[];
+}
+

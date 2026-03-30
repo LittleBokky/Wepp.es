@@ -5,8 +5,8 @@ import { Logo } from './Logo';
 import { useLanguage, Language } from '../services/LanguageContext';
 
 interface NavbarProps {
-  setView: (view: 'home' | 'products' | 'about' | 'contact') => void;
-  currentView: 'home' | 'products' | 'about' | 'contact';
+  setView: (view: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  currentView: 'home' | 'products' | 'about' | 'contact' | 'admin';
   onSearch: (query: string) => void;
 }
 

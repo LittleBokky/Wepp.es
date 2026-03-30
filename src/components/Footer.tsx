@@ -1,11 +1,13 @@
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight, ShieldCheck } from 'lucide-react';
+
 import { Logo } from './Logo';
 import { useLanguage } from '../services/LanguageContext';
 
 interface FooterProps {
-  setView: (view: 'home' | 'products' | 'about' | 'contact') => void;
+  setView: (view: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
 }
+
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
   const { t } = useLanguage();
@@ -110,8 +112,15 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                 {link.label}
               </a>
             ))}
+            <button 
+              onClick={() => { setView('admin'); window.scrollTo(0, 0); }}
+              className="text-wepp-red/40 hover:text-wepp-red transition-all text-[9px] font-black uppercase tracking-[0.4em] flex items-center gap-2"
+            >
+              <ShieldCheck className="w-3 h-3" /> Acceso Admin
+            </button>
           </div>
         </div>
+
       </div>
     </footer>
   );
