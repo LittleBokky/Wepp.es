@@ -268,3 +268,25 @@ export interface AdminStats {
   recentOrders: Order[];
 }
 
+export interface VendorCredential {
+  id: string;
+  username: string;
+  passwordHash: string;
+  salespersonId: string;
+  name: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface Taller {
+  id: string;
+  name: string;
+  city: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  status: 'Activo' | 'Inactivo' | 'Pendiente';
+  joinDate: string;
+  notes?: string;
+}
+

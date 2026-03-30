@@ -1,67 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  LayoutDashboard, 
-  ShoppingCart, 
-  Users, 
-  Package, 
-  Settings, 
-  TrendingUp, 
-  DollarSign, 
-  Activity, 
-  ChevronRight, 
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Users,
+  Package,
+  Settings,
+  TrendingUp,
+  DollarSign,
+  Activity,
+  ChevronRight,
   MoreHorizontal,
   Plus,
   RefreshCw,
   Search,
-  CheckCircle2,
-  Clock,
-  Truck,
-  Ban,
   ArrowUpRight,
   Trash2,
   Edit3,
-  X as CloseIcon
+  X as CloseIcon,
+  KeyRound,
+  Wrench,
+  MapPin,
+  Phone,
+  Mail
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  initAdminData, 
-  updateOrderStatus, 
-  addSalesperson, 
-  deleteOrder, 
-  deleteSalesperson, 
+import {
+  initAdminData,
+  updateOrderStatus,
+  addSalesperson,
+  deleteOrder,
+  deleteSalesperson,
   updateSalesperson,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  getTalleres,
+  addTaller,
+  deleteTaller
 } from '../services/adminService';
+import {
+  getVendorCredentials,
+  addVendorCredential,
+  deleteVendorCredential,
+  changeAdminPassword
+} from '../services/authService';
 
-import { Order, Salesperson, AdminStats, Product, PRODUCTS } from '../types';
+import { Order, Salesperson, AdminStats, Product, VendorCredential, Taller } from '../types';
 
 
 interface AdminPortalProps {
   onClose: () => void;
   products: Product[];
   setProducts: (products: Product[]) => void;
+  adminEmail?: string;
 }
 
-export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, setProducts }) => {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'salespeople' | 'inventory' | 'settings'>('dashboard');
+export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, setProducts, adminEmail }) => {
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'salespeople' | 'inventory' | 'settings' | 'accesos' | 'talleres'>('dashboard');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [salespeople, setSalespeople] = useState<Salesperson[]>([]);
+  const [vendorCredentials, setVendorCredentials] = useState<VendorCredential[]>([]);
+  const [talleres, setTalleres] = useState<Taller[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('Todos');
   const [editingSalesperson, setEditingSalesperson] = useState<Salesperson | null>(null);
-  const [editingOrder, setEditingOrder] = useState<Order | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [showAddVendor, setShowAddVendor] = useState(false);
+  const [showAddTaller, setShowAddTaller] = useState(false);
+  const [newAdminPassword, setNewAdminPassword] = useState('');
 
 
   useEffect(() => {
-
     const loadData = async () => {
       const data = await initAdminData();
       setStats(data.stats);
       setOrders(data.orders);
       setSalespeople(data.salespeople);
+      const [creds, tals] = await Promise.all([
+        getVendorCredentials(),
+        getTalleres(),
+      ]);
+      setVendorCredentials(creds);
+      setTalleres(tals);
       setIsLoading(false);
     };
     loadData();
@@ -111,6 +131,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
     { id: 'orders', label: 'Pedidos', icon: ShoppingCart },
     { id: 'salespeople', label: 'Vendedores', icon: Users },
     { id: 'inventory', label: 'Inventario', icon: Package },
+    { id: 'accesos', label: 'Accesos', icon: KeyRound },
+    { id: 'talleres', label: 'Talleres', icon: Wrench },
     { id: 'settings', label: 'Configuración', icon: Settings },
   ];
 
@@ -162,13 +184,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
 
         <div className="p-6 bg-slate-900/50 mt-auto border-t border-white/5">
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-wepp-red to-orange-500 flex items-center justify-center font-black">AD</div>
-            <div className="flex flex-col">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-wepp-red to-orange-500 flex items-center justify-center font-black text-white">AD</div>
+            <div className="flex flex-col min-w-0">
               <span className="text-xs font-black uppercase">Administrador</span>
-              <span className="text-[10px] text-slate-500 uppercase tracking-widest">Online</span>
+              <span className="text-[9px] text-slate-500 tracking-widest truncate">{adminEmail || 'admin'}</span>
             </div>
           </div>
-          <button 
+          <button
             onClick={onClose}
             className="w-full py-2 border border-white/10 text-[9px] font-black uppercase tracking-[0.2em] hover:bg-white/5 transition-all"
           >
@@ -553,6 +575,183 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
               </div>
             )}
 
+            {activeTab === 'accesos' && (
+              <div className="space-y-8">
+                {/* Vendor Credentials */}
+                <div className="bg-white border border-slate-100 shadow-sm">
+                  <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <KeyRound className="w-5 h-5 text-wepp-red" />
+                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Accesos Vendedores</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowAddVendor(true)}
+                      className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all"
+                    >
+                      <Plus className="w-4 h-4" /> Nuevo Acceso
+                    </button>
+                  </div>
+
+                  {vendorCredentials.length === 0 ? (
+                    <div className="p-16 text-center">
+                      <KeyRound className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                      <p className="text-slate-400 text-sm font-medium">No hay accesos creados</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left">
+                        <thead>
+                          <tr className="bg-slate-50">
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Usuario</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Vendedor ID</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Estado</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Creado</th>
+                            <th className="px-8 py-4"></th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {vendorCredentials.map(vc => (
+                            <tr key={vc.id} className="hover:bg-slate-50">
+                              <td className="px-8 py-5 text-xs font-black text-wepp-navy">{vc.username}</td>
+                              <td className="px-8 py-5 text-xs font-bold text-wepp-navy">{vc.name}</td>
+                              <td className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase">{vc.salespersonId}</td>
+                              <td className="px-8 py-5">
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 ${vc.active ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                                  {vc.active ? 'Activo' : 'Inactivo'}
+                                </span>
+                              </td>
+                              <td className="px-8 py-5 text-xs text-slate-400">
+                                {new Date(vc.createdAt).toLocaleDateString('es-ES')}
+                              </td>
+                              <td className="px-8 py-5">
+                                <button
+                                  onClick={async () => {
+                                    if (confirm(`¿Eliminar acceso de "${vc.username}"?`)) {
+                                      await deleteVendorCredential(vc.id);
+                                      setVendorCredentials(prev => prev.filter(v => v.id !== vc.id));
+                                    }
+                                  }}
+                                  className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+                {/* Admin Password Change */}
+                <div className="bg-white border border-slate-100 shadow-sm p-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <Settings className="w-5 h-5 text-wepp-red" />
+                    <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Cambiar Contraseña Admin</h3>
+                  </div>
+                  <div className="max-w-md space-y-4">
+                    <div>
+                      <label className="text-[9px] font-black uppercase tracking-widest text-slate-400 block mb-2">Nueva Contraseña</label>
+                      <input
+                        type="password"
+                        value={newAdminPassword}
+                        onChange={e => setNewAdminPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:border-wepp-navy transition-colors"
+                      />
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!newAdminPassword || newAdminPassword.length < 6) return alert('Mínimo 6 caracteres');
+                        if (!adminEmail) return;
+                        await changeAdminPassword(adminEmail, newAdminPassword);
+                        setNewAdminPassword('');
+                        alert('Contraseña actualizada');
+                      }}
+                      className="bg-wepp-navy text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest hover:bg-wepp-red transition-all"
+                    >
+                      Actualizar Contraseña
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'talleres' && (
+              <div className="space-y-8">
+                <div className="bg-white border border-slate-100 shadow-sm">
+                  <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Wrench className="w-5 h-5 text-wepp-red" />
+                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Talleres Autorizados</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowAddTaller(true)}
+                      className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all"
+                    >
+                      <Plus className="w-4 h-4" /> Añadir Taller
+                    </button>
+                  </div>
+
+                  {talleres.length === 0 ? (
+                    <div className="p-16 text-center">
+                      <Wrench className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                      <p className="text-slate-400 text-sm font-medium">No hay talleres registrados</p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
+                      {talleres.map(taller => (
+                        <div key={taller.id} className="border border-slate-100 p-6 relative group hover:border-wepp-red transition-all">
+                          <div className="flex items-start justify-between mb-4">
+                            <div className="w-10 h-10 bg-wepp-navy rounded-xl flex items-center justify-center">
+                              <Wrench className="w-4 h-4 text-white" />
+                            </div>
+                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 ${
+                              taller.status === 'Activo' ? 'bg-emerald-50 text-emerald-600' :
+                              taller.status === 'Pendiente' ? 'bg-amber-50 text-amber-600' :
+                              'bg-slate-100 text-slate-400'
+                            }`}>
+                              {taller.status}
+                            </span>
+                          </div>
+                          <h4 className="text-sm font-black text-wepp-navy uppercase tracking-tight mb-1">{taller.name}</h4>
+                          <div className="flex items-center gap-2 text-slate-400 text-xs mb-3">
+                            <MapPin className="w-3 h-3 text-wepp-red flex-shrink-0" />
+                            {taller.city}
+                          </div>
+                          {taller.phone && (
+                            <div className="flex items-center gap-2 text-slate-400 text-xs">
+                              <Phone className="w-3 h-3 text-wepp-red flex-shrink-0" />
+                              {taller.phone}
+                            </div>
+                          )}
+                          {taller.email && (
+                            <div className="flex items-center gap-2 text-slate-400 text-xs mt-1">
+                              <Mail className="w-3 h-3 text-wepp-red flex-shrink-0" />
+                              {taller.email}
+                            </div>
+                          )}
+                          <button
+                            onClick={async () => {
+                              if (confirm(`¿Eliminar "${taller.name}"?`)) {
+                                const updated = await deleteTaller(taller.id);
+                                setTalleres(updated);
+                              }
+                            }}
+                            className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {activeTab === 'settings' && (
               <div className="max-w-3xl mx-auto space-y-8">
                 <div className="bg-white border border-slate-100 shadow-sm p-12">
@@ -724,6 +923,135 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
         </AnimatePresence>
       </main>
 
+      {/* Add Vendor Credential Modal */}
+      <AnimatePresence>
+        {showAddVendor && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Acceso Vendedor</h3>
+                <button onClick={() => setShowAddVendor(false)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const cred = await addVendorCredential({
+                  username: fd.get('username') as string,
+                  password: fd.get('password') as string,
+                  salespersonId: fd.get('salespersonId') as string,
+                  name: fd.get('name') as string,
+                });
+                setVendorCredentials(prev => [...prev, cred]);
+                setShowAddVendor(false);
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre Completo</label>
+                  <input name="name" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre de Usuario</label>
+                  <input name="username" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Contraseña</label>
+                  <input name="password" type="password" required minLength={6} className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Vendedor Asignado</label>
+                  <select name="salespersonId" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                    <option value="">— Seleccionar —</option>
+                    {salespeople.map(s => (
+                      <option key={s.id} value={s.id}>{s.name} ({s.id})</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setShowAddVendor(false)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Crear Acceso</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Taller Modal */}
+      <AnimatePresence>
+        {showAddTaller && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Añadir Taller</h3>
+                <button onClick={() => setShowAddTaller(false)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const newTaller = await addTaller({
+                  name: fd.get('name') as string,
+                  city: fd.get('city') as string,
+                  address: fd.get('address') as string,
+                  phone: fd.get('phone') as string,
+                  email: fd.get('email') as string,
+                  status: fd.get('status') as Taller['status'],
+                  notes: fd.get('notes') as string,
+                });
+                setTalleres(prev => [...prev, newTaller]);
+                setShowAddTaller(false);
+              }} className="space-y-5">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre del Taller</label>
+                    <input name="name" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Ciudad</label>
+                    <input name="city" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Estado</label>
+                    <select name="status" defaultValue="Activo" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                      <option value="Activo">Activo</option>
+                      <option value="Pendiente">Pendiente</option>
+                      <option value="Inactivo">Inactivo</option>
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Teléfono</label>
+                    <input name="phone" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Email</label>
+                    <input name="email" type="email" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Dirección</label>
+                    <input name="address" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setShowAddTaller(false)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Guardar Taller</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

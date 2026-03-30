@@ -1,15 +1,16 @@
 import React from 'react';
-import { Facebook, Instagram, Linkedin, Mail, Phone, MapPin, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Mail, Phone, ArrowUpRight, LogIn } from 'lucide-react';
 
 import { Logo } from './Logo';
 import { useLanguage } from '../services/LanguageContext';
 
 interface FooterProps {
   setView: (view: 'home' | 'products' | 'about' | 'contact' | 'admin') => void;
+  onOpenLogin: () => void;
 }
 
 
-export const Footer: React.FC<FooterProps> = ({ setView }) => {
+export const Footer: React.FC<FooterProps> = ({ setView, onOpenLogin }) => {
   const { t } = useLanguage();
   return (
     <footer className="bg-wepp-dark text-white pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
@@ -63,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             </ul>
           </div>
 
-          {/* Official Provider Column - Compact & Elegant */}
+          {/* Official Provider Column */}
           <div className="lg:col-span-4">
             <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-8 backdrop-blur-sm relative group overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-wepp-red/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-wepp-red/20 transition-colors"></div>
@@ -75,6 +76,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                     <span className="text-wepp-red text-[9px] font-black uppercase tracking-[0.4em]">{t('footer.official_provider')}</span>
                   </div>
                   <h5 className="text-xl font-black text-white uppercase tracking-tight mb-2">Michael Leffler</h5>
+                  <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">¿Eres taller y quieres acceso?</p>
                 </div>
 
                 <div className="space-y-3 pt-6 border-t border-white/5 w-full flex flex-col items-center md:items-start">
@@ -102,7 +104,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           <p className="text-slate-600 text-[9px] font-black uppercase tracking-[0.4em]">
             © {new Date().getFullYear()} WEPP ESPAÑA · GERMAN TECHNOLOGY
           </p>
-          <div className="flex gap-10">
+          <div className="flex flex-wrap items-center gap-8 justify-center">
             {[
               { label: t('footer.legal'), href: '#' },
               { label: t('footer.privacy'), href: '#' },
@@ -112,11 +114,11 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                 {link.label}
               </a>
             ))}
-            <button 
-              onClick={() => { setView('admin'); window.scrollTo(0, 0); }}
-              className="text-wepp-red/40 hover:text-wepp-red transition-all text-[9px] font-black uppercase tracking-[0.4em] flex items-center gap-2"
+            <button
+              onClick={onOpenLogin}
+              className="flex items-center gap-2 bg-wepp-red hover:bg-red-700 text-white px-5 py-2.5 text-[9px] font-black uppercase tracking-[0.3em] transition-all active:scale-95"
             >
-              <ShieldCheck className="w-3 h-3" /> Acceso Admin
+              <LogIn className="w-3.5 h-3.5" /> Acceso Portal
             </button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { ref, set, push, onValue, get, update } from 'firebase/database';
+import { ref, set, get } from 'firebase/database';
 import { Order, Salesperson, AdminStats, PRODUCTS, Product } from '../types';
 
 // Mock data generation for orders
@@ -188,6 +188,66 @@ export const updateProduct = async (productId: string, data: Partial<Product>) =
     return updatedProducts;
   }
   return [];
+};
+
+// ─── Talleres ───────────────────────────────────────────────────────────────
+
+import { Taller } from '../types';
+
+export const getTalleres = async (): Promise<Taller[]> => {
+  const talleresRef = ref(db, 'talleres');
+  const snapshot = await get(talleresRef);
+  if (!snapshot.exists()) return [];
+  const val = snapshot.val();
+  if (Array.isArray(val)) return val;
+  return Object.values(val) as Taller[];
+};
+
+export const addTaller = async (
+  data: Omit<Taller, 'id' | 'joinDate'>
+): Promise<Taller> => {
+  const talleresRef = ref(db, 'talleres');
+  const snapshot = await get(talleresRef);
+  const current: Taller[] = snapshot.exists()
+    ? Array.isArray(snapshot.val())
+      ? snapshot.val()
+      : Object.values(snapshot.val())
+    : [];
+  const newTaller: Taller = {
+    ...data,
+    id: `TALLER-${Date.now()}`,
+    joinDate: new Date().toISOString(),
+  };
+  const updated = [...current, newTaller];
+  await set(talleresRef, updated);
+  return newTaller;
+};
+
+export const updateTaller = async (
+  tallerId: string,
+  data: Partial<Taller>
+): Promise<Taller[]> => {
+  const talleresRef = ref(db, 'talleres');
+  const snapshot = await get(talleresRef);
+  if (!snapshot.exists()) return [];
+  const current: Taller[] = Array.isArray(snapshot.val())
+    ? snapshot.val()
+    : Object.values(snapshot.val());
+  const updated = current.map(t => (t.id === tallerId ? { ...t, ...data } : t));
+  await set(talleresRef, updated);
+  return updated;
+};
+
+export const deleteTaller = async (tallerId: string): Promise<Taller[]> => {
+  const talleresRef = ref(db, 'talleres');
+  const snapshot = await get(talleresRef);
+  if (!snapshot.exists()) return [];
+  const current: Taller[] = Array.isArray(snapshot.val())
+    ? snapshot.val()
+    : Object.values(snapshot.val());
+  const updated = current.filter(t => t.id !== tallerId);
+  await set(talleresRef, updated);
+  return updated;
 };
 
 

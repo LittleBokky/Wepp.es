@@ -6,15 +6,17 @@ import { ProductCard } from './components/ProductCard';
 import { Footer } from './components/Footer';
 import { AboutPage } from './components/AboutPage';
 import { ContactSection } from './components/ContactSection';
-import { PRODUCTS, Order, Salesperson } from './types';
-import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu } from 'lucide-react';
+import { PRODUCTS, Taller } from './types';
+import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu, MapPin, Phone, Mail, Wrench } from 'lucide-react';
 import { motion } from 'motion/react';
 import { AdminPortal } from './components/AdminPortal';
-
+import { LoginModal, UserSession } from './components/LoginModal';
+import { VendorPortal } from './components/VendorPortal';
 
 import { LanguageProvider, useLanguage } from './services/LanguageContext';
 import { ref, set, onValue } from 'firebase/database';
 import { db } from './services/firebase';
+import { getTalleres } from './services/adminService';
 
 export default function App() {
   return (
@@ -28,25 +30,25 @@ function AppContent() {
   const { t } = useLanguage();
   const [view, setView] = useState<'home' | 'products' | 'about' | 'contact' | 'admin'>('home');
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
-
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [firebaseProducts, setFirebaseProducts] = useState<any[]>(PRODUCTS);
+  const [showLogin, setShowLogin] = useState(false);
+  const [session, setSession] = useState<UserSession | null>(null);
+  const [talleres, setTalleres] = useState<Taller[]>([]);
+
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
 
   const [testData, setTestData] = useState<string>('Cargando...');
 
   useEffect(() => {
-    // Escuchar cambios
     const testRef = ref(db, 'test_connection');
     const unsubscribe = onValue(testRef, (snapshot) => {
       const data = snapshot.val();
       setTestData(data || 'No hay datos');
     });
 
-    // Escribir un dato de prueba
     set(testRef, "Conexión exitosa a la base de datos! " + new Date().toLocaleTimeString());
 
-    // Cargar productos de Firebase
     const productsRef = ref(db, 'products');
     const unsubscribeProducts = onValue(productsRef, (snapshot) => {
       const data = snapshot.val();
@@ -55,13 +57,15 @@ function AppContent() {
       }
     });
 
+    // Load talleres
+    getTalleres().then(setTalleres);
+
     return () => {
       unsubscribe();
       unsubscribeProducts();
     };
   }, []);
 
-  // Scroll to top when view changes
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [view]);
@@ -74,6 +78,20 @@ function AppContent() {
     }
   };
 
+  const handleLoginSuccess = (s: UserSession) => {
+    setSession(s);
+    setShowLogin(false);
+    if (s.type === 'admin') {
+      setView('admin');
+    }
+    window.scrollTo(0, 0);
+  };
+
+  const handleLogout = () => {
+    setSession(null);
+    setView('home');
+  };
+
   const filteredProducts = firebaseProducts.filter(p => {
     const matchesCategory = activeCategory === 'Todos' || p.category === activeCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,8 +100,20 @@ function AppContent() {
     return matchesCategory && matchesSearch;
   });
 
+  // Vendor portal overrides everything
+  if (session?.type === 'vendor') {
+    return <VendorPortal credential={session.credential} onClose={handleLogout} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-wepp-silver">
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onSuccess={handleLoginSuccess}
+        />
+      )}
+
       <Navbar setView={setView} currentView={view} onSearch={handleSearch} />
 
       <main className="flex-grow pt-16 md:pt-20">
@@ -196,7 +226,6 @@ function AppContent() {
             <section id="sobre-nosotros" className="py-40 bg-white relative overflow-hidden">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid lg:grid-cols-12 gap-24 items-start">
-                  {/* Left Column: Visual & Legacy */}
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -226,7 +255,6 @@ function AppContent() {
                     </motion.div>
                   </motion.div>
 
-                  {/* Right Column: Narrative */}
                   <div className="lg:col-span-7 pt-8">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
@@ -346,6 +374,73 @@ function AppContent() {
                 </motion.div>
               </div>
             </section>
+
+            {/* Talleres Partners Section */}
+            {talleres.length > 0 && (
+              <section id="talleres-partners" className="py-24 bg-white overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8 }}
+                    className="mb-16"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-[2px] w-8 bg-wepp-red"></div>
+                      <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">Red de Distribución</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black text-wepp-navy uppercase tracking-tighter leading-none">
+                      Talleres <br />
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-wepp-red to-orange-500">Autorizados</span>
+                    </h2>
+                  </motion.div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {talleres.filter(t => t.status === 'Activo').map((taller, i) => (
+                      <motion.div
+                        key={taller.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: i * 0.08 }}
+                        className="bg-slate-50 border border-slate-100 p-8 hover:border-wepp-red hover:shadow-xl transition-all group"
+                      >
+                        <div className="flex items-start justify-between mb-6">
+                          <div className="w-12 h-12 bg-wepp-navy rounded-2xl flex items-center justify-center group-hover:bg-wepp-red transition-colors">
+                            <Wrench className="w-5 h-5 text-white" />
+                          </div>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1">
+                            Activo
+                          </span>
+                        </div>
+                        <h3 className="text-lg font-black text-wepp-navy uppercase tracking-tight mb-1">
+                          {taller.name}
+                        </h3>
+                        <div className="flex items-center gap-2 text-slate-400 mb-4">
+                          <MapPin className="w-3 h-3 text-wepp-red flex-shrink-0" />
+                          <span className="text-xs font-medium">{taller.city}</span>
+                        </div>
+                        {(taller.phone || taller.email) && (
+                          <div className="border-t border-slate-100 pt-4 space-y-2">
+                            {taller.phone && (
+                              <a href={`tel:${taller.phone}`} className="flex items-center gap-2 text-xs text-slate-400 hover:text-wepp-navy transition-colors">
+                                <Phone className="w-3 h-3 text-wepp-red" /> {taller.phone}
+                              </a>
+                            )}
+                            {taller.email && (
+                              <a href={`mailto:${taller.email}`} className="flex items-center gap-2 text-xs text-slate-400 hover:text-wepp-navy transition-colors">
+                                <Mail className="w-3 h-3 text-wepp-red" /> {taller.email}
+                              </a>
+                            )}
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
           </>
         ) : view === 'products' ? (
           <section className="py-20 bg-white min-h-screen">
@@ -395,17 +490,17 @@ function AppContent() {
         ) : view === 'contact' ? (
           <ContactSection />
         ) : (
-          <AdminPortal 
-            products={firebaseProducts} 
-            setProducts={setFirebaseProducts} 
-            onClose={() => setView('home')} 
+          <AdminPortal
+            products={firebaseProducts}
+            setProducts={setFirebaseProducts}
+            onClose={handleLogout}
+            adminEmail={session?.type === 'admin' ? session.email : ''}
           />
         )}
 
       </main>
 
-
-      <Footer setView={setView} />
+      <Footer setView={setView} onOpenLogin={() => setShowLogin(true)} />
     </div>
   );
 }
