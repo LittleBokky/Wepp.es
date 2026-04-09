@@ -13,7 +13,8 @@ async function hashPassword(password: string): Promise<string> {
     .join('');
 }
 
-export const initAdminAuth = async () => {
+export const initAuth = async () => {
+  // Init Admins
   const authRef = ref(db, 'auth/admins');
   const snapshot = await get(authRef);
   if (!snapshot.exists()) {
@@ -25,6 +26,23 @@ export const initAdminAuth = async () => {
     }));
     await set(authRef, admins);
   }
+
+  // Init Default Vendor
+  const vendorsRef = ref(db, 'auth/vendors');
+  const vendorSnapshot = await get(vendorsRef);
+  if (!vendorSnapshot.exists()) {
+    const vHash = await hashPassword('vendedor123');
+    const defaultVendor: VendorCredential = {
+      id: 'VCRED-001',
+      username: 'roberto_vendedor',
+      passwordHash: vHash,
+      salespersonId: 'VEND-001',
+      name: 'Roberto Gómez',
+      active: true,
+      createdAt: new Date().toISOString()
+    };
+    await set(ref(db, 'auth/vendors/VCRED-001'), defaultVendor);
+  }
 };
 
 export const loginAdmin = async (
@@ -34,7 +52,7 @@ export const loginAdmin = async (
   const normalizedEmail = email.toLowerCase().trim();
   if (!ADMIN_EMAILS.map(e => e.toLowerCase()).includes(normalizedEmail)) return null;
 
-  await initAdminAuth();
+  await initAuth();
 
   const authRef = ref(db, 'auth/admins');
   const snapshot = await get(authRef);
@@ -52,6 +70,7 @@ export const loginVendor = async (
   username: string,
   password: string
 ): Promise<VendorCredential | null> => {
+  await initAuth();
   const vendorsRef = ref(db, 'auth/vendors');
   const snapshot = await get(vendorsRef);
   if (!snapshot.exists()) return null;

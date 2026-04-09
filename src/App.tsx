@@ -38,32 +38,18 @@ function AppContent() {
 
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
 
-  const [testData, setTestData] = useState<string>('Cargando...');
-
   useEffect(() => {
-    const testRef = ref(db, 'test_connection');
-    const unsubscribe = onValue(testRef, (snapshot) => {
-      const data = snapshot.val();
-      setTestData(data || 'No hay datos');
-    });
-
-    set(testRef, "Conexión exitosa a la base de datos! " + new Date().toLocaleTimeString());
-
+    // Escuchar cambios en productos si es necesario
     const productsRef = ref(db, 'products');
-    const unsubscribeProducts = onValue(productsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        setFirebaseProducts(data);
+    onValue(productsRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        setFirebaseProducts(Array.isArray(data) ? data : Object.values(data));
       }
     });
 
-    // Load talleres
+    // Cargar talleres
     getTalleres().then(setTalleres);
-
-    return () => {
-      unsubscribe();
-      unsubscribeProducts();
-    };
   }, []);
 
   useEffect(() => {
@@ -121,13 +107,6 @@ function AppContent() {
           <>
             <div id="hero">
               <Hero setView={setView} />
-            </div>
-
-            {/* Test Firebase Connection */}
-            <div className="bg-emerald-500/10 border-y border-emerald-500/20 py-2 text-center">
-              <p className="text-[10px] font-black uppercase tracking-widest text-emerald-600">
-                📡 Firebase: {testData}
-              </p>
             </div>
 
 

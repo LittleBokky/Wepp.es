@@ -1009,6 +1009,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   email: fd.get('email') as string,
                   status: fd.get('status') as Taller['status'],
                   notes: fd.get('notes') as string,
+                  salespersonId: fd.get('salespersonId') as string,
                 });
                 setTalleres(prev => [...prev, newTaller]);
                 setShowAddTaller(false);
@@ -1041,6 +1042,15 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   <div className="col-span-2 space-y-2">
                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Dirección</label>
                     <input name="address" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="col-span-2 space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Vendedor Asignado</label>
+                    <select name="salespersonId" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                      <option value="">— Ninguno —</option>
+                      {salespeople.map(s => (
+                        <option key={s.id} value={s.id}>{s.name} ({s.id})</option>
+                      ))}
+                    </select>
                   </div>
                 </div>
                 <div className="flex gap-4 pt-4">

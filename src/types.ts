@@ -288,5 +288,32 @@ export interface Taller {
   status: 'Activo' | 'Inactivo' | 'Pendiente';
   joinDate: string;
   notes?: string;
+  salespersonId?: string;
+}
+
+export interface Budget {
+  id: string;
+  tallerId: string;
+  tallerName: string;
+  salespersonId: string;
+  items: {
+    productId: string;
+    productName: string;
+    quantity: number;
+    price: number;
+  }[];
+  total: number;
+  status: 'Borrador' | 'Enviado' | 'Aceptado' | 'Rechazado';
+  createdAt: string;
+  validUntil: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  receiverId: string;
+  text: string;
+  timestamp: string;
+  read: boolean;
 }
 
