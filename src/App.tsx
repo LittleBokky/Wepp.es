@@ -183,8 +183,12 @@ function AppContent() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                     className="md:col-span-2 bg-slate-900 p-10 rounded-3xl relative overflow-hidden group shadow-2xl"
                   >
-                    <div className="absolute top-0 right-0 p-8 opacity-10">
-                      <Award className="w-32 h-32 text-white" />
+                    <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-40 transition-opacity">
+                      <img 
+                        src="https://upload.wikimedia.org/wikipedia/commons/4/44/BMW.svg" 
+                        alt="BMW Official Approval" 
+                        className="w-24 h-24 grayscale brightness-200" 
+                      />
                     </div>
                     <div className="relative z-10">
                       <h3 className="text-2xl font-black text-white mb-4 uppercase tracking-tighter">{t('tech.gold_title')}</h3>
@@ -212,14 +216,14 @@ function AppContent() {
                     transition={{ duration: 1 }}
                     className="lg:col-span-5 relative"
                   >
-                    <div className="aspect-[4/5] overflow-hidden rounded-[40px] shadow-2xl group">
+                    <div className="aspect-square overflow-hidden rounded-[40px] shadow-2xl group">
                       <img
-                        src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=1000"
-                        alt="WEPP Laboratory"
+                        src="/about-main.jpg"
+                        alt="WEPP Quality Control"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                         referrerPolicy="no-referrer"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-wepp-navy/40 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-wepp-navy/10 to-transparent"></div>
                     </div>
 
                     <motion.div
@@ -229,7 +233,7 @@ function AppContent() {
                       transition={{ delay: 0.5 }}
                       className="absolute -bottom-10 -right-10 bg-wepp-red p-12 rounded-[32px] shadow-2xl shadow-wepp-red/20 hidden md:block"
                     >
-                      <h3 className="text-white font-black text-5xl tracking-tighter mb-1">45+</h3>
+                      <h3 className="text-white font-black text-5xl tracking-tighter mb-1">25+</h3>
                       <p className="text-white/80 text-[10px] font-black uppercase tracking-[0.2em]">{t('about.badge')}</p>
                     </motion.div>
                   </motion.div>
@@ -341,9 +345,9 @@ function AppContent() {
                     </div>
                     <div className="h-72 sm:h-96 lg:h-full lg:min-h-[600px] relative overflow-hidden group">
                       <img
-                        src="/taller.jpg"
-                        alt="Professional Workshop"
-                        className="absolute inset-0 w-full h-full object-cover grayscale opacity-50 group-hover:scale-110 transition-transform duration-[2000ms]"
+                        src="/workshop-real.png"
+                        alt="Professional Workshop with WEPP Products"
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2000ms]"
                         referrerPolicy="no-referrer"
                       />
                       <div className="absolute inset-0 bg-gradient-to-l from-transparent to-wepp-navy lg:block hidden"></div>

@@ -208,7 +208,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ setView }) => {
                     </h2>
                     <div className="grid md:grid-cols-3 gap-12">
                         {[
-                            { label: t('about_page.stat1_label'), val: "45+", sub: t('about_page.stat1_sub') },
+                            { label: t('about_page.stat1_label'), val: "25+", sub: t('about_page.stat1_sub') },
                             { label: t('about_page.stat2_label'), val: "100%", sub: t('about_page.stat2_sub') },
                             { label: t('about_page.stat3_label'), val: "DCT", sub: t('about_page.stat3_sub') }
                         ].map((stat, i) => (

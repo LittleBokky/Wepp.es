@@ -36,9 +36,9 @@ export const Hero: React.FC<HeroProps> = ({ setView }) => {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-wepp-dark/60 via-wepp-dark/20 to-wepp-dark z-10"></div>
         <img
-          src="/fondo.png"
+          src="/hero-main.jpg"
           alt="Premium Car Repair Service"
-          className="w-full h-full object-cover mix-blend-luminosity brightness-50"
+          className="w-full h-full object-cover brightness-75"
           referrerPolicy="no-referrer"
         />
       </motion.div>
