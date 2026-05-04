@@ -12,8 +12,20 @@ export const initAdminData = async () => {
     return { orders: [], salespeople: [], stats: { totalRevenue: 0, totalOrders: 0, activeSalespeople: 0, inventoryValue: 0, salesGrowth: 0, recentOrders: [] } };
   }
   
-  const orders = (ordersData || []) as Order[];
-  const salespeople = (salespeopleData || []) as Salesperson[];
+  const salespeople = (salespeopleData || []).map(s => ({
+    ...s,
+    totalSales: s.total_sales || 0,
+    joinDate: s.join_date,
+    commissions: s.commissions || 0
+  })) as Salesperson[];
+
+  const orders = (ordersData || []).map(o => ({
+    ...o,
+    customerName: o.customer_name,
+    customerEmail: o.customer_email,
+    shippingAddress: o.shipping_address,
+    salespersonId: o.salesperson_id
+  })) as Order[];
 
   const stats: AdminStats = {
     totalRevenue: orders.reduce((acc, o) => acc + o.total, 0),
@@ -36,7 +48,13 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
   if (error) throw error;
   
   const { data } = await supabase.from('orders').select('*');
-  return (data || []) as Order[];
+  return (data || []).map(o => ({
+    ...o,
+    customerName: o.customer_name,
+    customerEmail: o.customer_email,
+    shippingAddress: o.shipping_address,
+    salespersonId: o.salesperson_id
+  })) as Order[];
 };
 
 export const addSalesperson = async (salesperson: Omit<Salesperson, 'id' | 'joinDate' | 'commissions' | 'totalSales'>) => {
@@ -52,19 +70,35 @@ export const addSalesperson = async (salesperson: Omit<Salesperson, 'id' | 'join
   if (error) throw error;
 
   const { data } = await supabase.from('salespeople').select('*');
-  return (data || []) as Salesperson[];
+  return (data || []).map(s => ({
+    ...s,
+    totalSales: s.total_sales || 0,
+    joinDate: s.join_date,
+    commissions: s.commissions || 0
+  })) as Salesperson[];
 };
 
 export const deleteOrder = async (orderId: string) => {
   await supabase.from('orders').delete().eq('id', orderId);
   const { data } = await supabase.from('orders').select('*');
-  return (data || []) as Order[];
+  return (data || []).map(o => ({
+    ...o,
+    customerName: o.customer_name,
+    customerEmail: o.customer_email,
+    shippingAddress: o.shipping_address,
+    salespersonId: o.salesperson_id
+  })) as Order[];
 };
 
 export const deleteSalesperson = async (salespersonId: string) => {
   await supabase.from('salespeople').delete().eq('id', salespersonId);
   const { data } = await supabase.from('salespeople').select('*');
-  return (data || []) as Salesperson[];
+  return (data || []).map(s => ({
+    ...s,
+    totalSales: s.total_sales || 0,
+    joinDate: s.join_date,
+    commissions: s.commissions || 0
+  })) as Salesperson[];
 };
 
 export const updateSalesperson = async (salespersonId: string, data: Partial<Salesperson>) => {
@@ -77,7 +111,12 @@ export const updateSalesperson = async (salespersonId: string, data: Partial<Sal
 
   await supabase.from('salespeople').update(updateData).eq('id', salespersonId);
   const { data: allData } = await supabase.from('salespeople').select('*');
-  return (allData || []) as Salesperson[];
+  return (allData || []).map(s => ({
+    ...s,
+    totalSales: s.total_sales || 0,
+    joinDate: s.join_date,
+    commissions: s.commissions || 0
+  })) as Salesperson[];
 };
 
 export const deleteProduct = async (productId: string) => {
@@ -129,13 +168,21 @@ export const updateTaller = async (
 
   await supabase.from('talleres').update(updateData).eq('id', tallerId);
   const { data: allData } = await supabase.from('talleres').select('*');
-  return (allData || []) as Taller[];
+  return (allData || []).map(t => ({
+    ...t,
+    joinDate: t.join_date,
+    salespersonId: t.salesperson_id
+  })) as Taller[];
 };
 
 export const deleteTaller = async (tallerId: string): Promise<Taller[]> => {
   await supabase.from('talleres').delete().eq('id', tallerId);
   const { data } = await supabase.from('talleres').select('*');
-  return (data || []) as Taller[];
+  return (data || []).map(t => ({
+    ...t,
+    joinDate: t.join_date,
+    salespersonId: t.salesperson_id
+  })) as Taller[];
 };
 
 

@@ -68,6 +68,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddVendor, setShowAddVendor] = useState(false);
   const [showAddTaller, setShowAddTaller] = useState(false);
+  const [showAddSalesperson, setShowAddSalesperson] = useState(false);
+  const [editingVendor, setEditingVendor] = useState<VendorCredential | null>(null);
   const [newAdminPassword, setNewAdminPassword] = useState('');
 
 
@@ -476,7 +478,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                       <p className="text-[10px] text-slate-400 uppercase tracking-widest font-black">Gestionar accesos y comisiones</p>
                     </div>
                   </div>
-                  <button className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all shadow-xl shadow-red-100">
+                  <button 
+                    onClick={() => setShowAddSalesperson(true)}
+                    className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all shadow-xl shadow-red-100"
+                  >
                     <Plus className="w-4 h-4" /> Nuevo Vendedor
                   </button>
                 </div>
@@ -500,11 +505,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                       <div className="grid grid-cols-2 gap-4 pt-6 border-t border-slate-50">
                         <div className="flex flex-col">
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Ventas</span>
-                          <span className="text-sm font-black text-wepp-navy">{person.totalSales.toLocaleString()}€</span>
+                          <span className="text-sm font-black text-wepp-navy">{(person.totalSales || 0).toLocaleString()}€</span>
                         </div>
                         <div className="flex flex-col">
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Comisión</span>
-                          <span className="text-sm font-black text-wepp-red">{person.commissions.toLocaleString()}€</span>
+                          <span className="text-sm font-black text-wepp-red">{(person.commissions || 0).toLocaleString()}€</span>
                         </div>
                       </div>
                       
@@ -646,18 +651,27 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                               <td className="px-8 py-5 text-xs text-slate-400">
                                 {new Date(vc.createdAt).toLocaleDateString('es-ES')}
                               </td>
-                              <td className="px-8 py-5">
-                                <button
-                                  onClick={async () => {
-                                    if (confirm(`¿Eliminar acceso de "${vc.username}"?`)) {
-                                      await deleteVendorCredential(vc.id);
-                                      setVendorCredentials(prev => prev.filter(v => v.id !== vc.id));
-                                    }
-                                  }}
-                                  className="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
+                              <td className="px-8 py-5 text-right">
+                                <div className="flex items-center justify-end gap-3">
+                                  <button 
+                                    onClick={() => setEditingVendor(vc)}
+                                    className="p-2 text-slate-400 hover:text-wepp-navy transition-colors"
+                                    title="Editar acceso"
+                                  >
+                                    <Edit3 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      if (confirm(`¿Eliminar acceso de "${vc.username}"?`)) {
+                                        await deleteVendorCredential(vc.id);
+                                        setVendorCredentials(prev => prev.filter(v => v.id !== vc.id));
+                                      }
+                                    }}
+                                    className="p-2 text-slate-400 hover:text-wepp-red"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           ))}
@@ -1078,6 +1092,119 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                 <div className="flex gap-4 pt-4">
                   <button type="button" onClick={() => setShowAddTaller(false)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
                   <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Guardar Taller</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Add Salesperson Modal */}
+      <AnimatePresence>
+        {showAddSalesperson && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Vendedor</h3>
+                <button onClick={() => setShowAddSalesperson(false)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const updatedSalespeople = await addSalesperson({
+                  name: fd.get('name') as string,
+                  email: fd.get('email') as string,
+                  region: fd.get('region') as string,
+                  status: fd.get('status') as Salesperson['status'],
+                });
+                setSalespeople(updatedSalespeople);
+                setShowAddSalesperson(false);
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre Completo</label>
+                  <input name="name" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Email Corporativo</label>
+                  <input name="email" type="email" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Región</label>
+                    <input name="region" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Estado Inicial</label>
+                    <select name="status" defaultValue="Activo" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                      <option value="Activo">Activo</option>
+                      <option value="Inactivo">Inactivo</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setShowAddSalesperson(false)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Crear Vendedor</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Vendor Credential Modal */}
+      <AnimatePresence>
+        {editingVendor && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Editar Acceso</h3>
+                <button onClick={() => setEditingVendor(null)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const password = fd.get('password') as string;
+                
+                const updateData: any = {
+                  name: fd.get('name') as string,
+                  username: fd.get('username') as string,
+                };
+                if (password) updateData.password = password;
+
+                await updateVendorCredential(editingVendor.id, updateData);
+                const updatedCreds = await getVendorCredentials();
+                setVendorCredentials(updatedCreds);
+                setEditingVendor(null);
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre Completo</label>
+                  <input name="name" defaultValue={editingVendor.name} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre de Usuario</label>
+                  <input name="username" defaultValue={editingVendor.username} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                  <input name="password" type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setEditingVendor(null)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Guardar Cambios</button>
                 </div>
               </form>
             </motion.div>
