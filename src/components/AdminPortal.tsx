@@ -62,6 +62,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   const [vendorCredentials, setVendorCredentials] = useState<VendorCredential[]>([]);
   const [talleres, setTalleres] = useState<Taller[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('Todos');
   const [editingSalesperson, setEditingSalesperson] = useState<Salesperson | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -145,28 +146,41 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
+    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row relative">
+      {/* Mobile Header Toggle */}
+      <div className="md:hidden bg-wepp-navy text-white p-4 flex items-center justify-between sticky top-0 z-50 shadow-lg">
+        <div className="flex flex-col">
+          <span className="text-wepp-red font-black text-[10px] uppercase tracking-widest">Admin</span>
+          <span className="text-lg font-black tracking-tighter">WEPP GLOBAL</span>
+        </div>
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 bg-white/5 rounded-lg text-white"
+        >
+          {isSidebarOpen ? <CloseIcon className="w-6 h-6" /> : <LayoutDashboard className="w-6 h-6" />}
+        </button>
+      </div>
+
       {/* Sidebar */}
-      <aside className="w-full md:w-64 bg-wepp-navy text-white flex flex-col h-screen overflow-hidden sticky top-0">
-        <div className="p-8 border-b border-white/5 flex items-center justify-between">
+      <aside className={`
+        fixed inset-y-0 left-0 z-40 w-64 bg-wepp-navy text-white flex flex-col h-screen transition-transform duration-300 ease-in-out md:translate-x-0 md:static md:block
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `}>
+        <div className="p-8 border-b border-white/5 hidden md:flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-wepp-red font-black text-xs tracking-widest uppercase">Admin Portal</span>
             <span className="text-xl font-black uppercase tracking-tighter">WEPP GLOBAL</span>
           </div>
-          <motion.button 
-            whileTap={{ scale: 0.9 }}
-            onClick={onClose}
-            className="md:hidden text-white/60 hover:text-white"
-          >
-            <Settings className="w-5 h-5" />
-          </motion.button>
         </div>
 
         <nav className="flex-1 p-4 flex flex-col gap-2 mt-4 overflow-y-auto">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => {
+                setActiveTab(tab.id as any);
+                setIsSidebarOpen(false);
+              }}
               className={`flex items-center gap-4 px-4 py-4 transition-all group ${
                 activeTab === tab.id 
                   ? 'bg-wepp-red text-white' 
@@ -199,9 +213,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
         </div>
       </aside>
 
+      {/* Overlay for mobile sidebar */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Main Content */}
-      <main className="flex-1 p-6 md:p-12 overflow-y-auto">
-        <header className="mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <main className="flex-1 p-4 md:p-12 overflow-x-hidden">
+        <header className="mb-8 md:mb-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <h1 className="text-4xl font-black text-wepp-navy uppercase tracking-tighter mb-2">
               {tabs.find(t => t.id === activeTab)?.label}

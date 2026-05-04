@@ -22,8 +22,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { VendorCredential, Order, Salesperson, Taller, Product, Budget, ChatMessage } from '../types';
-import { ref, get } from 'firebase/database';
-import { db } from '../services/firebase';
+import { supabase } from '../services/supabase';
 import { 
   getSellerTalleres, 
   createTaller, 
@@ -72,24 +71,24 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
 
   useEffect(() => {
     const loadData = async () => {
-      const [ordersSnap, salespeopleSnap, productsSnap] = await Promise.all([
-        get(ref(db, 'admin/orders')),
-        get(ref(db, 'admin/salespeople')),
-        get(ref(db, 'products')),
+      setLoading(true);
+      const [ordersRes, salespeopleRes, productsRes] = await Promise.all([
+        supabase.from('orders').select('*').eq('salesperson_id', credential.salespersonId),
+        supabase.from('salespeople').select('*'),
+        supabase.from('products').select('*'),
       ]);
 
-      if (ordersSnap.exists()) {
-        const allOrders: Order[] = ordersSnap.val();
-        setOrders(allOrders.filter(o => o.salespersonId === credential.salespersonId));
+      if (ordersRes.data) {
+        setOrders(ordersRes.data as Order[]);
       }
 
-      if (salespeopleSnap.exists()) {
-        const all: Salesperson[] = salespeopleSnap.val();
+      if (salespeopleRes.data) {
+        const all: Salesperson[] = salespeopleRes.data as Salesperson[];
         setSalesperson(all.find(s => s.id === credential.salespersonId) || null);
       }
 
-      if (productsSnap.exists()) {
-        setProducts(productsSnap.val());
+      if (productsRes.data) {
+        setProducts(productsRes.data as Product[]);
       }
 
       const [myTalleres, myBudgets] = await Promise.all([
@@ -103,6 +102,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
     };
     loadData();
   }, [credential.salespersonId]);
+
 
   useEffect(() => {
     if (selectedTallerForChat) {

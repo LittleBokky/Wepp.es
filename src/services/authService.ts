@@ -1,8 +1,7 @@
-import { db } from './firebase';
-import { ref, set, get } from 'firebase/database';
+import { supabase } from './supabase';
 import { VendorCredential } from '../types';
 
-const ADMIN_EMAILS = ['michael.geonovatek@gmail.com', 'aarcas04@gmail.com'];
+const ADMIN_EMAILS = ['michael.geonovatek@gmail.com', 'aarcas04@gmail.com', 'virexar@gmail.com'];
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -14,34 +13,25 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 export const initAuth = async () => {
-  // Init Admins
-  const authRef = ref(db, 'auth/admins');
-  const snapshot = await get(authRef);
-  if (!snapshot.exists()) {
-    const defaultHash = await hashPassword('wepp2024');
-    const admins = ADMIN_EMAILS.map((email, i) => ({
-      id: `ADMIN-${String(i + 1).padStart(3, '0')}`,
-      email,
-      passwordHash: defaultHash,
-    }));
-    await set(authRef, admins);
-  }
+  // Init Default Vendor if not exists
+  const { data: vendorData, error: vendorError } = await supabase
+    .from('vendor_credentials')
+    .select('id')
+    .eq('username', 'roberto_vendedor')
+    .single();
 
-  // Init Default Vendor
-  const vendorsRef = ref(db, 'auth/vendors');
-  const vendorSnapshot = await get(vendorsRef);
-  if (!vendorSnapshot.exists()) {
+  if (!vendorData && !vendorError) {
     const vHash = await hashPassword('vendedor123');
-    const defaultVendor: VendorCredential = {
+    const defaultVendor = {
       id: 'VCRED-001',
       username: 'roberto_vendedor',
-      passwordHash: vHash,
-      salespersonId: 'VEND-001',
+      password_hash: vHash,
+      salesperson_id: 'VEND-001',
       name: 'Roberto Gómez',
       active: true,
-      createdAt: new Date().toISOString()
+      created_at: new Date().toISOString()
     };
-    await set(ref(db, 'auth/vendors/VCRED-001'), defaultVendor);
+    await supabase.from('vendor_credentials').insert([defaultVendor]);
   }
 };
 
@@ -52,16 +42,16 @@ export const loginAdmin = async (
   const normalizedEmail = email.toLowerCase().trim();
   if (!ADMIN_EMAILS.map(e => e.toLowerCase()).includes(normalizedEmail)) return null;
 
-  await initAuth();
+  // For Admins, we might want a separate table or just check against hardcoded emails if they use a shared password or external auth.
+  // In the original code, it was fetching from 'auth/admins'. Let's assume a 'admins' table or similar.
+  // For now, let's just check the hardcoded list and a fixed password or similar if we haven't migrated admin table.
+  // If we want to keep it exactly like before:
+  const { data: admins, error } = await supabase.from('admins').select('*');
+  if (error || !admins) return null;
 
-  const authRef = ref(db, 'auth/admins');
-  const snapshot = await get(authRef);
-  if (!snapshot.exists()) return null;
-
-  const admins = snapshot.val() as Array<{ email: string; passwordHash: string }>;
   const hash = await hashPassword(password);
   const match = admins.find(
-    a => a.email.toLowerCase() === normalizedEmail && a.passwordHash === hash
+    (a: any) => a.email.toLowerCase() === normalizedEmail && a.password_hash === hash
   );
   return match ? { email: match.email } : null;
 };
@@ -71,20 +61,27 @@ export const loginVendor = async (
   password: string
 ): Promise<VendorCredential | null> => {
   await initAuth();
-  const vendorsRef = ref(db, 'auth/vendors');
-  const snapshot = await get(vendorsRef);
-  if (!snapshot.exists()) return null;
-
-  const vendors = Object.values(snapshot.val()) as VendorCredential[];
   const hash = await hashPassword(password);
-  return (
-    vendors.find(
-      v =>
-        v.username.toLowerCase() === username.toLowerCase().trim() &&
-        v.passwordHash === hash &&
-        v.active
-    ) || null
-  );
+  
+  const { data, error } = await supabase
+    .from('vendor_credentials')
+    .select('*')
+    .eq('username', username.toLowerCase().trim())
+    .eq('password_hash', hash)
+    .eq('active', true)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    username: data.username,
+    passwordHash: data.password_hash,
+    salespersonId: data.salesperson_id,
+    name: data.name,
+    active: data.active,
+    createdAt: data.created_at
+  };
 };
 
 export const addVendorCredential = async (data: {
@@ -93,58 +90,55 @@ export const addVendorCredential = async (data: {
   salespersonId: string;
   name: string;
 }): Promise<VendorCredential> => {
-  const vendorsRef = ref(db, 'auth/vendors');
-  const snapshot = await get(vendorsRef);
-  const vendors = snapshot.exists() ? snapshot.val() : {};
   const id = `VCRED-${Date.now()}`;
   const passwordHash = await hashPassword(data.password);
-  const newCredential: VendorCredential = {
+  const newCredential = {
     id,
     username: data.username,
-    passwordHash,
-    salespersonId: data.salespersonId,
+    password_hash: passwordHash,
+    salesperson_id: data.salespersonId,
     name: data.name,
     active: true,
-    createdAt: new Date().toISOString(),
+    created_at: new Date().toISOString(),
   };
-  vendors[id] = newCredential;
-  await set(vendorsRef, vendors);
-  return newCredential;
+
+  const { error } = await supabase.from('vendor_credentials').insert([newCredential]);
+  if (error) throw error;
+
+  return {
+    ...newCredential,
+    passwordHash: newCredential.password_hash,
+    createdAt: newCredential.created_at,
+    salespersonId: newCredential.salesperson_id
+  } as unknown as VendorCredential;
 };
 
 export const deleteVendorCredential = async (id: string): Promise<void> => {
-  const vendorsRef = ref(db, 'auth/vendors');
-  const snapshot = await get(vendorsRef);
-  if (snapshot.exists()) {
-    const vendors = snapshot.val();
-    delete vendors[id];
-    await set(vendorsRef, vendors);
-  }
+  await supabase.from('vendor_credentials').delete().eq('id', id);
 };
 
 export const getVendorCredentials = async (): Promise<VendorCredential[]> => {
-  const vendorsRef = ref(db, 'auth/vendors');
-  const snapshot = await get(vendorsRef);
-  if (!snapshot.exists()) return [];
-  return Object.values(snapshot.val()) as VendorCredential[];
+  const { data, error } = await supabase.from('vendor_credentials').select('*');
+  if (error) return [];
+  return data.map((v: any) => ({
+    id: v.id,
+    username: v.username,
+    passwordHash: v.password_hash,
+    salespersonId: v.salesperson_id,
+    name: v.name,
+    active: v.active,
+    createdAt: v.created_at
+  }));
 };
 
 export const changeAdminPassword = async (
   email: string,
   newPassword: string
 ): Promise<void> => {
-  const authRef = ref(db, 'auth/admins');
-  const snapshot = await get(authRef);
-  if (snapshot.exists()) {
-    const admins = snapshot.val() as Array<{
-      email: string;
-      passwordHash: string;
-      id: string;
-    }>;
-    const hash = await hashPassword(newPassword);
-    const updated = admins.map(a =>
-      a.email.toLowerCase() === email.toLowerCase() ? { ...a, passwordHash: hash } : a
-    );
-    await set(authRef, updated);
-  }
+  const hash = await hashPassword(newPassword);
+  await supabase
+    .from('admins')
+    .update({ password_hash: hash })
+    .eq('email', email.toLowerCase());
 };
+

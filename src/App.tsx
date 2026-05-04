@@ -14,8 +14,7 @@ import { LoginModal, UserSession } from './components/LoginModal';
 import { VendorPortal } from './components/VendorPortal';
 
 import { LanguageProvider, useLanguage } from './services/LanguageContext';
-import { ref, set, onValue } from 'firebase/database';
-import { db } from './services/firebase';
+import { supabase } from './services/supabase';
 import { getTalleres } from './services/adminService';
 
 export default function App() {
@@ -31,7 +30,7 @@ function AppContent() {
   const [view, setView] = useState<'home' | 'products' | 'about' | 'contact' | 'admin'>('home');
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [firebaseProducts, setFirebaseProducts] = useState<any[]>(PRODUCTS);
+  const [storeProducts, setStoreProducts] = useState<any[]>(PRODUCTS);
   const [showLogin, setShowLogin] = useState(false);
   const [session, setSession] = useState<UserSession | null>(null);
   const [talleres, setTalleres] = useState<Taller[]>([]);
@@ -39,14 +38,17 @@ function AppContent() {
   const categories = ['Todos', 'Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'];
 
   useEffect(() => {
-    // Escuchar cambios en productos si es necesario
-    const productsRef = ref(db, 'products');
-    onValue(productsRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.val();
-        setFirebaseProducts(Array.isArray(data) ? data : Object.values(data));
+    // Cargar productos desde Supabase
+    const fetchProducts = async () => {
+      const { data, error } = await supabase.from('products').select('*');
+      if (data && data.length > 0) {
+        setStoreProducts(data);
+      } else {
+        // Fallback a estáticos si la DB está vacía
+        setStoreProducts(PRODUCTS);
       }
-    });
+    };
+    fetchProducts();
 
     // Cargar talleres
     getTalleres().then(setTalleres);
@@ -78,7 +80,7 @@ function AppContent() {
     setView('home');
   };
 
-  const filteredProducts = firebaseProducts.filter(p => {
+  const filteredProducts = storeProducts.filter(p => {
     const matchesCategory = activeCategory === 'Todos' || p.category === activeCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       p.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -474,8 +476,8 @@ function AppContent() {
           <ContactSection />
         ) : (
           <AdminPortal
-            products={firebaseProducts}
-            setProducts={setFirebaseProducts}
+            products={storeProducts}
+            setProducts={setStoreProducts}
             onClose={handleLogout}
             adminEmail={session?.type === 'admin' ? session.email : ''}
           />
