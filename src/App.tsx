@@ -10,8 +10,10 @@ import { PRODUCTS, Taller } from './types';
 import { ChevronRight, ShieldCheck, Zap, Gauge, Award, Cpu, MapPin, Phone, Mail, Wrench } from 'lucide-react';
 import { motion } from 'motion/react';
 import { AdminPortal } from './components/AdminPortal';
-import { LoginModal, UserSession } from './components/LoginModal';
+import { LoginModal } from './components/LoginModal';
 import { VendorPortal } from './components/VendorPortal';
+import { WorkshopPortal } from './components/WorkshopPortal';
+import { UserSession } from './types';
 
 import { LanguageProvider, useLanguage } from './services/LanguageContext';
 import { supabase } from './services/supabase';
@@ -88,9 +90,13 @@ function AppContent() {
     return matchesCategory && matchesSearch;
   });
 
-  // Vendor portal overrides everything
+  // Portal overrides everything
   if (session?.type === 'vendor') {
-    return <VendorPortal credential={session.credential} onClose={handleLogout} />;
+    return <VendorPortal credential={session.credential!} onClose={handleLogout} />;
+  }
+
+  if (session?.type === 'workshop') {
+    return <WorkshopPortal credential={session.workshopCredential!} onClose={handleLogout} />;
   }
 
   return (

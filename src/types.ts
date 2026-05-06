@@ -248,7 +248,7 @@ export interface Order {
   shippingAddress: string;
 }
 
-export interface Salesperson {
+export interface Comercial {
   id: string;
   name: string;
   email: string;
@@ -262,7 +262,7 @@ export interface Salesperson {
 export interface AdminStats {
   totalRevenue: number;
   totalOrders: number;
-  activeSalespeople: number;
+  activeComerciales: number;
   inventoryValue: number;
   salesGrowth: number;
   recentOrders: Order[];
@@ -276,6 +276,23 @@ export interface VendorCredential {
   name: string;
   active: boolean;
   createdAt: string;
+}
+
+export interface WorkshopCredential {
+  id: string;
+  username: string;
+  passwordHash: string;
+  tallerId: string;
+  name: string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface UserSession {
+  type: 'admin' | 'vendor' | 'workshop';
+  email?: string;
+  credential?: VendorCredential;
+  workshopCredential?: WorkshopCredential;
 }
 
 export interface Taller {

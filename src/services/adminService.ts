@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { Order, Salesperson, AdminStats, Product, Taller } from '../types';
+import { Order, Comercial, AdminStats, Product, Taller } from '../types';
 
 export const initAdminData = async () => {
   const { data: ordersData } = await supabase.from('orders').select('*');
@@ -17,7 +17,7 @@ export const initAdminData = async () => {
     totalSales: s.total_sales || 0,
     joinDate: s.join_date,
     commissions: s.commissions || 0
-  })) as Salesperson[];
+  })) as Comercial[];
 
   const orders = (ordersData || []).map(o => ({
     ...o,
@@ -30,7 +30,7 @@ export const initAdminData = async () => {
   const stats: AdminStats = {
     totalRevenue: orders.reduce((acc, o) => acc + o.total, 0),
     totalOrders: orders.length,
-    activeSalespeople: salespeople.filter(s => s.status === 'Activo').length,
+    activeComerciales: salespeople.filter(s => s.status === 'Activo').length,
     inventoryValue: 154200.00,
     salesGrowth: 15.4,
     recentOrders: orders.slice(0, 5)
@@ -57,7 +57,7 @@ export const updateOrderStatus = async (orderId: string, newStatus: Order['statu
   })) as Order[];
 };
 
-export const addSalesperson = async (salesperson: Omit<Salesperson, 'id' | 'joinDate' | 'commissions' | 'totalSales'>) => {
+export const addSalesperson = async (salesperson: Omit<Comercial, 'id' | 'joinDate' | 'commissions' | 'totalSales'>) => {
   const newSalesperson = {
     ...salesperson,
     id: `VEND-00${Date.now()}`, // Simple ID generation
@@ -75,7 +75,7 @@ export const addSalesperson = async (salesperson: Omit<Salesperson, 'id' | 'join
     totalSales: s.total_sales || 0,
     joinDate: s.join_date,
     commissions: s.commissions || 0
-  })) as Salesperson[];
+  })) as Comercial[];
 };
 
 export const deleteOrder = async (orderId: string) => {
@@ -98,10 +98,10 @@ export const deleteSalesperson = async (salespersonId: string) => {
     totalSales: s.total_sales || 0,
     joinDate: s.join_date,
     commissions: s.commissions || 0
-  })) as Salesperson[];
+  })) as Comercial[];
 };
 
-export const updateSalesperson = async (salespersonId: string, data: Partial<Salesperson>) => {
+export const updateSalesperson = async (salespersonId: string, data: Partial<Comercial>) => {
   // Map camelCase to snake_case if needed
   const updateData: any = { ...data };
   if (data.totalSales !== undefined) {
@@ -116,7 +116,7 @@ export const updateSalesperson = async (salespersonId: string, data: Partial<Sal
     totalSales: s.total_sales || 0,
     joinDate: s.join_date,
     commissions: s.commissions || 0
-  })) as Salesperson[];
+  })) as Comercial[];
 };
 
 export const deleteProduct = async (productId: string) => {

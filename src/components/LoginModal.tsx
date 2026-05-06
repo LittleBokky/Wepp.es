@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { X, LogIn, ShieldCheck, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { loginAdmin, loginVendor } from '../services/authService';
-import { VendorCredential } from '../types';
-
-export type UserSession =
-  | { type: 'admin'; email: string }
-  | { type: 'vendor'; credential: VendorCredential };
+import { loginAdmin, loginVendor, loginWorkshop } from '../services/authService';
+import { UserSession } from '../types';
+import { Wrench } from 'lucide-react';
 
 interface LoginModalProps {
   onClose: () => void;
@@ -14,7 +11,9 @@ interface LoginModalProps {
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) => {
-  const [tab, setTab] = useState<'admin' | 'vendor'>('admin');
+  const [tab, setTab] = useState<'admin' | 'vendor' | 'workshop'>('workshop');
+  const [showAdminTab, setShowAdminTab] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -33,12 +32,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
         } else {
           setError('Credenciales incorrectas');
         }
-      } else {
+      } else if (tab === 'vendor') {
         const result = await loginVendor(username, password);
         if (result) {
           onSuccess({ type: 'vendor', credential: result });
         } else {
           setError('Usuario o contraseña incorrectos');
+        }
+      } else {
+        const result = await loginWorkshop(username, password);
+        if (result) {
+          onSuccess({ type: 'workshop', workshopCredential: result });
+        } else {
+          setError('Credenciales de taller incorrectas');
         }
       }
     } catch {
@@ -69,7 +75,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
                     Portal de Acceso
                   </span>
                 </div>
-                <h2 className="text-2xl font-black text-white uppercase tracking-tighter">
+                <h2 
+                  onClick={() => {
+                    const newCount = clickCount + 1;
+                    setClickCount(newCount);
+                    if (newCount >= 5) setShowAdminTab(true);
+                  }}
+                  className="text-2xl font-black text-white uppercase tracking-tighter cursor-default select-none"
+                >
                   WEPP GLOBAL
                 </h2>
               </div>
@@ -84,16 +97,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
 
           {/* Tabs */}
           <div className="flex border-b border-slate-100">
-            <button
-              onClick={() => { setTab('admin'); setError(''); }}
-              className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                tab === 'admin'
-                  ? 'text-wepp-navy border-b-2 border-wepp-red'
-                  : 'text-slate-400 hover:text-wepp-navy'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4" /> Administrador
-            </button>
+            {showAdminTab && (
+              <button
+                onClick={() => { setTab('admin'); setError(''); }}
+                className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
+                  tab === 'admin'
+                    ? 'text-wepp-navy border-b-2 border-wepp-red'
+                    : 'text-slate-400 hover:text-wepp-navy'
+                }`}
+              >
+                <ShieldCheck className="w-4 h-4" /> Administrador
+              </button>
+            )}
             <button
               onClick={() => { setTab('vendor'); setError(''); }}
               className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
@@ -102,7 +117,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
                   : 'text-slate-400 hover:text-wepp-navy'
               }`}
             >
-              <User className="w-4 h-4" /> Vendedor
+              <User className="w-4 h-4" /> Comercial
+            </button>
+            <button
+              onClick={() => { setTab('workshop'); setError(''); }}
+              className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
+                tab === 'workshop'
+                  ? 'text-wepp-navy border-b-2 border-wepp-red'
+                  : 'text-slate-400 hover:text-wepp-navy'
+              }`}
+            >
+              <Wrench className="w-4 h-4" /> Taller
             </button>
           </div>
 
@@ -131,21 +156,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
                 </motion.div>
               ) : (
                 <motion.div
-                  key="vendor-field"
+                  key="user-field"
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
                   transition={{ duration: 0.15 }}
                 >
                   <label className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400 block mb-2">
-                    Nombre de Usuario
+                    {tab === 'vendor' ? 'Nombre de Usuario' : 'Usuario Taller'}
                   </label>
                   <input
                     type="text"
                     value={username}
                     onChange={e => setUsername(e.target.value)}
                     required
-                    placeholder="tu_usuario"
+                    placeholder={tab === 'vendor' ? 'tu_usuario' : 'usuario_taller'}
                     autoComplete="username"
                     className="w-full border border-slate-200 px-4 py-3 text-sm focus:outline-none focus:border-wepp-navy transition-colors font-medium"
                   />

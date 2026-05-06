@@ -21,8 +21,9 @@ import {
   UserPlus
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { VendorCredential, Order, Salesperson, Taller, Product, Budget, ChatMessage } from '../types';
+import { VendorCredential, Order, Comercial, Taller, Product, Budget, ChatMessage, WorkshopCredential } from '../types';
 import { supabase } from '../services/supabase';
+import { KeyRound, ShieldCheck } from 'lucide-react';
 import { 
   getSellerTalleres, 
   createTaller, 
@@ -32,6 +33,11 @@ import {
   listenToMessages,
   createWorkshopOrder 
 } from '../services/sellerService';
+import { 
+  addWorkshopCredential, 
+  getWorkshopCredentials, 
+  deleteWorkshopCredential 
+} from '../services/authService';
 
 interface VendorPortalProps {
   credential: VendorCredential;
@@ -41,11 +47,13 @@ interface VendorPortalProps {
 export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose }) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'talleres' | 'catalog' | 'budgets' | 'chat'>('dashboard');
   const [orders, setOrders] = useState<Order[]>([]);
-  const [salesperson, setSalesperson] = useState<Salesperson | null>(null);
+  const [salesperson, setSalesperson] = useState<Comercial | null>(null);
   const [talleres, setTalleres] = useState<Taller[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
+  const [workshopCredentials, setWorkshopCredentials] = useState<WorkshopCredential[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showAddAccess, setShowAddAccess] = useState<Taller | null>(null);
   
   // New Taller Modal
   const [showAddTaller, setShowAddTaller] = useState(false);
@@ -83,7 +91,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
       }
 
       if (salespeopleRes.data) {
-        const all: Salesperson[] = salespeopleRes.data as Salesperson[];
+        const all: Comercial[] = salespeopleRes.data as Comercial[];
         setSalesperson(all.find(s => s.id === credential.salespersonId) || null);
       }
 
@@ -91,13 +99,15 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
         setProducts(productsRes.data as Product[]);
       }
 
-      const [myTalleres, myBudgets] = await Promise.all([
+      const [myTalleres, myBudgets, wcreds] = await Promise.all([
         getSellerTalleres(credential.salespersonId),
-        getSellerBudgets(credential.salespersonId)
+        getSellerBudgets(credential.salespersonId),
+        getWorkshopCredentials()
       ]);
       
       setTalleres(myTalleres);
       setBudgets(myBudgets);
+      setWorkshopCredentials(wcreds);
       setLoading(false);
     };
     loadData();
@@ -191,7 +201,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
       <aside className="w-full md:w-64 bg-wepp-navy text-white flex flex-col h-screen overflow-hidden sticky top-0">
         <div className="p-8 border-b border-white/5 flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-wepp-red font-black text-xs tracking-widest uppercase">Seller Portal</span>
+            <span className="text-wepp-red font-black text-xs tracking-widest uppercase">Portal Comercial</span>
             <span className="text-xl font-black uppercase tracking-tighter">WEPP FORCE</span>
           </div>
         </div>
@@ -236,9 +246,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-12 overflow-y-auto">
         <header className="mb-12">
-          <h1 className="text-4xl font-black text-wepp-navy uppercase tracking-tighter mb-2">
-            {tabs.find(t => t.id === activeTab)?.label}
-          </h1>
+          <h1 className="text-4xl font-black text-wepp-navy uppercase tracking-tighter mb-2">Portal del Comercial</h1>
           <p className="text-slate-400 text-sm font-medium">Gestionando Región: {salesperson?.region || 'Principal'}</p>
         </header>
 
@@ -347,6 +355,38 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
                         >
                           Presupuesto
                         </button>
+                      </div>
+                      
+                      <div className="mt-2">
+                        {workshopCredentials.find(wc => wc.tallerId === taller.id) ? (
+                          <div className="flex items-center justify-between px-4 py-2 bg-emerald-50 border border-emerald-100">
+                            <div className="flex items-center gap-2">
+                              <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                              <span className="text-[8px] font-black text-emerald-600 uppercase tracking-widest">Acceso Activo</span>
+                            </div>
+                            <button 
+                              onClick={async () => {
+                                if (confirm('¿Eliminar acceso de este taller?')) {
+                                  const cred = workshopCredentials.find(wc => wc.tallerId === taller.id);
+                                  if (cred) {
+                                    await deleteWorkshopCredential(cred.id);
+                                    setWorkshopCredentials(prev => prev.filter(v => v.id !== cred.id));
+                                  }
+                                }
+                              }}
+                              className="text-[8px] font-black text-slate-400 hover:text-red-500 uppercase tracking-widest"
+                            >
+                              Revocar
+                            </button>
+                          </div>
+                        ) : (
+                          <button 
+                            onClick={() => setShowAddAccess(taller)}
+                            className="w-full py-2 bg-wepp-red/10 text-wepp-red text-[8px] font-black uppercase tracking-widest hover:bg-wepp-red hover:text-white transition-all flex items-center justify-center gap-2"
+                          >
+                            <KeyRound className="w-3 h-3" /> Dar Acceso Portal
+                          </button>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -489,7 +529,7 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
               <div className="bg-white border border-slate-100 h-[700px] shadow-xl flex overflow-hidden">
                 <div className="w-80 border-r border-slate-50 flex flex-col">
                   <div className="p-8 border-b border-slate-50">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Tallas & Mensajes</h3>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Mi Panel Comercial</h3>
                   </div>
                   <div className="flex-1 overflow-y-auto">
                     {talleres.map(t => (
@@ -640,7 +680,81 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
             )}
           </motion.div>
         </AnimatePresence>
-      </main>
+
+        {/* Add Access Modal */}
+        <AnimatePresence>
+          {showAddAccess && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-navy/90 backdrop-blur-sm">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white w-full max-w-md p-10 relative"
+              >
+                <button onClick={() => setShowAddAccess(null)} className="absolute top-6 right-6 text-slate-400 hover:text-wepp-red">
+                  <RefreshCw className="w-5 h-5 rotate-45" />
+                </button>
+                
+                <div className="flex items-center gap-4 mb-8">
+                  <div className="w-12 h-12 bg-wepp-navy text-white rounded-xl flex items-center justify-center">
+                    <KeyRound className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-black text-wepp-navy uppercase tracking-tighter">Crear Acceso</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Para: {showAddAccess.name}</p>
+                  </div>
+                </div>
+
+                <form onSubmit={async (e) => {
+                  e.preventDefault();
+                  const fd = new FormData(e.currentTarget);
+                  try {
+                    const cred = await addWorkshopCredential({
+                      username: fd.get('username') as string,
+                      password: fd.get('password') as string,
+                      tallerId: showAddAccess.id,
+                      name: showAddAccess.name,
+                    });
+                    setWorkshopCredentials(prev => [...prev, cred]);
+                    setShowAddAccess(null);
+                    alert('¡Acceso creado con éxito! Entrega las credenciales al cliente.');
+                  } catch (err) {
+                    alert('Error al crear acceso. El usuario ya podría existir.');
+                  }
+                }} className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Nombre de Usuario</label>
+                    <input 
+                      name="username" 
+                      required 
+                      defaultValue={showAddAccess.email?.split('@')[0] || ''}
+                      placeholder="usuario_taller"
+                      className="w-full bg-slate-50 border border-slate-100 p-4 text-xs font-bold outline-none focus:border-wepp-red transition-all" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-500">Contraseña Temporal</label>
+                    <input 
+                      name="password" 
+                      type="text"
+                      required 
+                      minLength={6}
+                      defaultValue="wepp123"
+                      className="w-full bg-slate-50 border border-slate-100 p-4 text-xs font-bold outline-none focus:border-wepp-red transition-all" 
+                    />
+                  </div>
+                  <p className="text-[8px] text-slate-400 font-bold uppercase leading-relaxed">
+                    * Recuerda que el taller podrá usar estas credenciales en la pestaña "Taller" del inicio de sesión.
+                  </p>
+                  <button type="submit" className="w-full bg-wepp-navy text-white py-5 font-black uppercase tracking-widest text-xs hover:bg-wepp-red transition-all shadow-xl">
+                    Activar Acceso Portal
+                      </button>
+                    </form>
+                  </motion.div>
+                </div>
+              )}
+            </AnimatePresence>
+          </main>
     </div>
   );
 };

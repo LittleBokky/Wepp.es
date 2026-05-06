@@ -41,10 +41,14 @@ import {
   getVendorCredentials,
   addVendorCredential,
   deleteVendorCredential,
+  getWorkshopCredentials,
+  addWorkshopCredential,
+  deleteWorkshopCredential,
+  updateWorkshopCredential,
   changeAdminPassword
 } from '../services/authService';
 
-import { Order, Salesperson, AdminStats, Product, VendorCredential, Taller } from '../types';
+import { Order, Comercial, AdminStats, Product, VendorCredential, WorkshopCredential, Taller } from '../types';
 
 
 interface AdminPortalProps {
@@ -58,18 +62,21 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'salespeople' | 'inventory' | 'settings' | 'accesos' | 'talleres'>('dashboard');
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
-  const [salespeople, setSalespeople] = useState<Salesperson[]>([]);
+  const [salespeople, setSalespeople] = useState<Comercial[]>([]);
   const [vendorCredentials, setVendorCredentials] = useState<VendorCredential[]>([]);
+  const [workshopCredentials, setWorkshopCredentials] = useState<WorkshopCredential[]>([]);
   const [talleres, setTalleres] = useState<Taller[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>('Todos');
-  const [editingSalesperson, setEditingSalesperson] = useState<Salesperson | null>(null);
+  const [editingSalesperson, setEditingSalesperson] = useState<Comercial | null>(null);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [showAddVendor, setShowAddVendor] = useState(false);
   const [showAddTaller, setShowAddTaller] = useState(false);
   const [showAddSalesperson, setShowAddSalesperson] = useState(false);
   const [editingVendor, setEditingVendor] = useState<VendorCredential | null>(null);
+  const [editingWorkshop, setEditingWorkshop] = useState<WorkshopCredential | null>(null);
+  const [showAddWorkshop, setShowAddWorkshop] = useState(false);
   const [newAdminPassword, setNewAdminPassword] = useState('');
 
 
@@ -79,11 +86,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
       setStats(data.stats);
       setOrders(data.orders);
       setSalespeople(data.salespeople);
-      const [creds, tals] = await Promise.all([
+      const [creds, wcreds, tals] = await Promise.all([
         getVendorCredentials(),
+        getWorkshopCredentials(),
         getTalleres(),
       ]);
       setVendorCredentials(creds);
+      setWorkshopCredentials(wcreds);
       setTalleres(tals);
       setIsLoading(false);
     };
@@ -109,7 +118,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
     }
   };
 
-  const handleUpdateSalesperson = async (id: string, data: Partial<Salesperson>) => {
+  const handleUpdateSalesperson = async (id: string, data: Partial<Comercial>) => {
     const updatedSalespeople = await updateSalesperson(id, data);
     setSalespeople(updatedSalespeople);
     setEditingSalesperson(null);
@@ -132,7 +141,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   const tabs = [
     { id: 'dashboard', label: 'Panel General', icon: LayoutDashboard },
     { id: 'orders', label: 'Pedidos', icon: ShoppingCart },
-    { id: 'salespeople', label: 'Vendedores', icon: Users },
+    { id: 'salespeople', label: 'Comerciales', icon: Users },
     { id: 'inventory', label: 'Inventario', icon: Package },
     { id: 'accesos', label: 'Accesos', icon: KeyRound },
     { id: 'talleres', label: 'Talleres', icon: Wrench },
@@ -263,7 +272,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   {[
                     { label: 'Ingresos Totales', value: `${stats.totalRevenue.toLocaleString()}€`, icon: DollarSign, color: 'emerald', trend: '+12.5%' },
                     { label: 'Pedidos Realizados', value: stats.totalOrders, icon: ShoppingCart, color: 'wepp-red', trend: '+5.2%' },
-                    { label: 'Vendedores Activos', value: stats.activeSalespeople, icon: Users, color: 'blue', trend: '0%' },
+                    { label: 'Comerciales Activos', value: stats.activeComerciales, icon: Users, color: 'blue', trend: '0%' },
                     { label: 'Valor Inventario', value: `${stats.inventoryValue.toLocaleString()}€`, icon: Package, color: 'amber', trend: '-2.1%' }
                   ].map((stat, i) => (
                     <div key={i} className="bg-white p-8 border border-slate-100 shadow-sm relative overflow-hidden group hover:shadow-xl transition-all">
@@ -482,7 +491,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                     onClick={() => setShowAddSalesperson(true)}
                     className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all shadow-xl shadow-red-100"
                   >
-                    <Plus className="w-4 h-4" /> Nuevo Vendedor
+                    <Plus className="w-4 h-4" /> Nuevo Comercial
                   </button>
                 </div>
 
@@ -609,7 +618,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   <div className="p-8 border-b border-slate-50 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       <KeyRound className="w-5 h-5 text-wepp-red" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Accesos Vendedores</h3>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Accesos Comerciales</h3>
                     </div>
                     <button
                       onClick={() => setShowAddVendor(true)}
@@ -631,7 +640,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                           <tr className="bg-slate-50">
                             <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Usuario</th>
                             <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre</th>
-                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Vendedor ID</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Comercial ID</th>
                             <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Estado</th>
                             <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Creado</th>
                             <th className="px-8 py-4"></th>
@@ -665,6 +674,83 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                                       if (confirm(`¿Eliminar acceso de "${vc.username}"?`)) {
                                         await deleteVendorCredential(vc.id);
                                         setVendorCredentials(prev => prev.filter(v => v.id !== vc.id));
+                                      }
+                                    }}
+                                    className="p-2 text-slate-400 hover:text-wepp-red"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+
+                {/* Workshop Credentials */}
+                <div className="bg-white border border-slate-100 shadow-sm mt-12">
+                  <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <Wrench className="w-5 h-5 text-wepp-red" />
+                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Accesos Talleres</h3>
+                    </div>
+                    <button
+                      onClick={() => setShowAddWorkshop(true)}
+                      className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all"
+                    >
+                      <Plus className="w-4 h-4" /> Nuevo Acceso Taller
+                    </button>
+                  </div>
+
+                  {workshopCredentials.length === 0 ? (
+                    <div className="p-16 text-center">
+                      <Wrench className="w-12 h-12 text-slate-200 mx-auto mb-4" />
+                      <p className="text-slate-400 text-sm font-medium">No hay accesos de talleres creados</p>
+                    </div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left">
+                        <thead>
+                          <tr className="bg-slate-50">
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Usuario</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Taller ID</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Estado</th>
+                            <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Creado</th>
+                            <th className="px-8 py-4"></th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-50">
+                          {workshopCredentials.map(wc => (
+                            <tr key={wc.id} className="hover:bg-slate-50">
+                              <td className="px-8 py-5 text-xs font-black text-wepp-navy">{wc.username}</td>
+                              <td className="px-8 py-5 text-xs font-bold text-wepp-navy">{wc.name}</td>
+                              <td className="px-8 py-5 text-[10px] font-black text-slate-500 uppercase">{wc.tallerId}</td>
+                              <td className="px-8 py-5">
+                                <span className={`text-[9px] font-black uppercase tracking-widest px-3 py-1 ${wc.active ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                                  {wc.active ? 'Activo' : 'Inactivo'}
+                                </span>
+                              </td>
+                              <td className="px-8 py-5 text-xs text-slate-400">
+                                {new Date(wc.createdAt).toLocaleDateString('es-ES')}
+                              </td>
+                              <td className="px-8 py-5 text-right">
+                                <div className="flex items-center justify-end gap-3">
+                                  <button 
+                                    onClick={() => setEditingWorkshop(wc)}
+                                    className="p-2 text-slate-400 hover:text-wepp-navy transition-colors"
+                                    title="Editar acceso"
+                                  >
+                                    <Edit3 className="w-4 h-4" />
+                                  </button>
+                                  <button
+                                    onClick={async () => {
+                                      if (confirm(`¿Eliminar acceso de "${wc.username}"?`)) {
+                                        await deleteWorkshopCredential(wc.id);
+                                        setWorkshopCredentials(prev => prev.filter(v => v.id !== wc.id));
                                       }
                                     }}
                                     className="p-2 text-slate-400 hover:text-wepp-red"
@@ -970,7 +1056,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
               className="bg-white w-full max-w-lg p-12 relative border border-white/10"
             >
               <div className="flex items-center justify-between mb-10">
-                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Acceso Vendedor</h3>
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Acceso Comercial</h3>
                 <button onClick={() => setShowAddVendor(false)} className="text-slate-400 hover:text-wepp-navy">
                   <CloseIcon className="w-6 h-6" />
                 </button>
@@ -1110,7 +1196,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
               className="bg-white w-full max-w-lg p-12 relative border border-white/10"
             >
               <div className="flex items-center justify-between mb-10">
-                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Vendedor</h3>
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Comercial</h3>
                 <button onClick={() => setShowAddSalesperson(false)} className="text-slate-400 hover:text-wepp-navy">
                   <CloseIcon className="w-6 h-6" />
                 </button>
@@ -1212,6 +1298,116 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {showAddWorkshop && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Nuevo Acceso Taller</h3>
+                <button onClick={() => setShowAddWorkshop(false)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const cred = await addWorkshopCredential({
+                  username: fd.get('username') as string,
+                  password: fd.get('password') as string,
+                  tallerId: fd.get('tallerId') as string,
+                  name: fd.get('name') as string,
+                });
+                setWorkshopCredentials(prev => [...prev, cred]);
+                setShowAddWorkshop(false);
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre Taller / Responsable</label>
+                  <input name="name" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre de Usuario</label>
+                  <input name="username" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Contraseña</label>
+                  <input name="password" type="password" required minLength={6} className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Asignar a Taller</label>
+                  <select name="tallerId" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                    <option value="">— Seleccionar —</option>
+                    {talleres.map(t => (
+                      <option key={t.id} value={t.id}>{t.name} ({t.city})</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setShowAddWorkshop(false)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Crear Acceso</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {editingWorkshop && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Editar Acceso Taller</h3>
+                <button onClick={() => setEditingWorkshop(null)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                const fd = new FormData(e.currentTarget);
+                const password = fd.get('password') as string;
+                
+                const updateData: any = {
+                  name: fd.get('name') as string,
+                  username: fd.get('username') as string,
+                };
+                if (password) updateData.password = password;
+
+                await updateWorkshopCredential(editingWorkshop.id, updateData);
+                const updatedCreds = await getWorkshopCredentials();
+                setWorkshopCredentials(updatedCreds);
+                setEditingWorkshop(null);
+              }} className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre Taller / Responsable</label>
+                  <input name="name" defaultValue={editingWorkshop.name} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre de Usuario</label>
+                  <input name="username" defaultValue={editingWorkshop.username} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nueva Contraseña (dejar en blanco para no cambiar)</label>
+                  <input name="password" type="password" placeholder="••••••••" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                </div>
+                <div className="flex gap-4 pt-4">
+                  <button type="button" onClick={() => setEditingWorkshop(null)} className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50">Cancelar</button>
+                  <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Guardar Cambios</button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

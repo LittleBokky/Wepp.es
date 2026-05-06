@@ -1,5 +1,5 @@
 import { supabase } from './supabase';
-import { VendorCredential } from '../types';
+import { VendorCredential, WorkshopCredential } from '../types';
 
 const ADMIN_EMAILS = ['michael.geonovatek@gmail.com', 'aarcas04@gmail.com', 'virexar@gmail.com'];
 
@@ -24,7 +24,7 @@ export const initAuth = async () => {
     const vHash = await hashPassword('vendedor123');
     const defaultVendor = {
       id: 'VCRED-001',
-      username: 'roberto_vendedor',
+      username: 'roberto_comercial',
       password_hash: vHash,
       salesperson_id: 'VEND-001',
       name: 'Roberto Gómez',
@@ -72,10 +72,10 @@ export const loginVendor = async (
   const normalizedUsername = username.toLowerCase().trim();
 
   // DEVELOPMENT BYPASS
-  if (normalizedUsername === 'roberto_vendedor' && password === 'vendedor123') {
+  if (normalizedUsername === 'roberto_comercial' && password === 'comercial123') {
     return {
       id: 'VCRED-001',
-      username: 'roberto_vendedor',
+      username: 'roberto_comercial',
       passwordHash: '',
       salespersonId: 'VEND-001',
       name: 'Roberto Gómez',
@@ -106,6 +106,114 @@ export const loginVendor = async (
     active: data.active,
     createdAt: data.created_at
   };
+};
+
+export const loginWorkshop = async (
+  username: string,
+  password: string
+): Promise<WorkshopCredential | null> => {
+  const normalizedUsername = username.toLowerCase().trim();
+
+  // DEVELOPMENT BYPASS
+  if (normalizedUsername === 'taller_demo' && password === 'taller123') {
+    return {
+      id: 'WCRED-001',
+      username: 'taller_demo',
+      passwordHash: '',
+      tallerId: 'TALLER-001',
+      name: 'Taller Demo Wepp',
+      active: true,
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  const hash = await hashPassword(password);
+  
+  const { data, error } = await supabase
+    .from('workshop_credentials')
+    .select('*')
+    .eq('username', normalizedUsername)
+    .eq('password_hash', hash)
+    .eq('active', true)
+    .single();
+
+  if (error || !data) return null;
+
+  return {
+    id: data.id,
+    username: data.username,
+    passwordHash: data.password_hash,
+    tallerId: data.taller_id,
+    name: data.name,
+    active: data.active,
+    createdAt: data.created_at
+  };
+};
+
+export const getWorkshopCredentials = async (): Promise<WorkshopCredential[]> => {
+  const { data, error } = await supabase.from('workshop_credentials').select('*');
+  if (error) return [];
+  return data.map((w: any) => ({
+    id: w.id,
+    username: w.username,
+    passwordHash: w.password_hash,
+    tallerId: w.taller_id,
+    name: w.name,
+    active: w.active,
+    createdAt: w.created_at
+  }));
+};
+
+export const addWorkshopCredential = async (data: {
+  username: string;
+  password: string;
+  tallerId: string;
+  name: string;
+}): Promise<WorkshopCredential> => {
+  const id = `WCRED-${Date.now()}`;
+  const passwordHash = await hashPassword(data.password);
+  const newCredential = {
+    id,
+    username: data.username,
+    password_hash: passwordHash,
+    taller_id: data.tallerId,
+    name: data.name,
+    active: true,
+    created_at: new Date().toISOString(),
+  };
+
+  const { error } = await supabase.from('workshop_credentials').insert([newCredential]);
+  if (error) throw error;
+
+  return {
+    ...newCredential,
+    passwordHash: newCredential.password_hash,
+    createdAt: newCredential.created_at,
+    tallerId: newCredential.taller_id
+  } as unknown as WorkshopCredential;
+};
+
+export const updateWorkshopCredential = async (id: string, data: {
+  username?: string;
+  name?: string;
+  password?: string;
+  active?: boolean;
+}): Promise<void> => {
+  const updateData: any = { ...data };
+  if (data.password) {
+    updateData.password_hash = await hashPassword(data.password);
+    delete updateData.password;
+  }
+  const { error } = await supabase
+    .from('workshop_credentials')
+    .update(updateData)
+    .eq('id', id);
+  
+  if (error) throw error;
+};
+
+export const deleteWorkshopCredential = async (id: string): Promise<void> => {
+  await supabase.from('workshop_credentials').delete().eq('id', id);
 };
 
 export const addVendorCredential = async (data: {
