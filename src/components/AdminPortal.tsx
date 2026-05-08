@@ -21,7 +21,8 @@ import {
   Wrench,
   MapPin,
   Phone,
-  Mail
+  Mail,
+  CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -35,7 +36,8 @@ import {
   updateProduct,
   getTalleres,
   addTaller,
-  deleteTaller
+  deleteTaller,
+  approveTaller
 } from '../services/adminService';
 import {
   getVendorCredentials,
@@ -78,6 +80,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   const [editingWorkshop, setEditingWorkshop] = useState<WorkshopCredential | null>(null);
   const [showAddWorkshop, setShowAddWorkshop] = useState(false);
   const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [approvingTaller, setApprovingTaller] = useState<Taller | null>(null);
+  const [approveClientNumber, setApproveClientNumber] = useState('');
+  const [approveComercialId, setApproveComercialId] = useState('');
+  const [tallerFilter, setTallerFilter] = useState<'Todos' | 'Pendiente' | 'Activo' | 'Inactivo'>('Todos');
 
 
   useEffect(() => {
@@ -803,18 +809,53 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
 
             {activeTab === 'talleres' && (
               <div className="space-y-8">
+                {/* Pending Alert */}
+                {talleres.filter(t => t.status === 'Pendiente').length > 0 && (
+                  <div className="bg-amber-50 border border-amber-200 p-6 flex items-center gap-4">
+                    <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                      <Wrench className="w-5 h-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-black text-amber-800 uppercase tracking-tight">
+                        {talleres.filter(t => t.status === 'Pendiente').length} solicitud(es) pendiente(s) de aprobación
+                      </h4>
+                      <p className="text-xs text-amber-600 mt-1">Revisa las solicitudes y asigna número de cliente y comercial.</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="bg-white border border-slate-100 shadow-sm">
-                  <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+                  <div className="p-8 border-b border-slate-50 flex flex-wrap items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <Wrench className="w-5 h-5 text-wepp-red" />
-                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Talleres Autorizados</h3>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-wepp-navy">Talleres Registrados</h3>
                     </div>
-                    <button
-                      onClick={() => setShowAddTaller(true)}
-                      className="bg-wepp-red text-white px-8 py-3 font-black text-[10px] uppercase tracking-widest flex items-center gap-3 hover:bg-wepp-navy transition-all"
-                    >
-                      <Plus className="w-4 h-4" /> Añadir Taller
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <div className="flex gap-1">
+                        {(['Todos', 'Pendiente', 'Activo', 'Inactivo'] as const).map(f => (
+                          <button
+                            key={f}
+                            onClick={() => setTallerFilter(f)}
+                            className={`px-4 py-2 text-[9px] font-black uppercase tracking-widest transition-all ${
+                              tallerFilter === f ? 'bg-wepp-navy text-white' : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
+                            } ${f === 'Pendiente' && talleres.filter(t => t.status === 'Pendiente').length > 0 ? 'relative' : ''}`}
+                          >
+                            {f}
+                            {f === 'Pendiente' && talleres.filter(t => t.status === 'Pendiente').length > 0 && (
+                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-wepp-red text-white text-[8px] font-black rounded-full flex items-center justify-center">
+                                {talleres.filter(t => t.status === 'Pendiente').length}
+                              </span>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => setShowAddTaller(true)}
+                        className="bg-wepp-red text-white px-6 py-2 font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:bg-wepp-navy transition-all"
+                      >
+                        <Plus className="w-4 h-4" /> Añadir
+                      </button>
+                    </div>
                   </div>
 
                   {talleres.length === 0 ? (
@@ -823,26 +864,50 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                       <p className="text-slate-400 text-sm font-medium">No hay talleres registrados</p>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-8">
-                      {talleres.map(taller => (
-                        <div key={taller.id} className="border border-slate-100 p-6 relative group hover:border-wepp-red transition-all">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 p-6">
+                      {talleres
+                        .filter(t => tallerFilter === 'Todos' || t.status === tallerFilter)
+                        .map(taller => (
+                        <div
+                          key={taller.id}
+                          className={`border p-6 relative group transition-all ${
+                            taller.status === 'Pendiente'
+                              ? 'border-amber-200 bg-amber-50/30 hover:border-amber-400'
+                              : 'border-slate-100 hover:border-wepp-red'
+                          }`}
+                        >
                           <div className="flex items-start justify-between mb-4">
                             <div className="w-10 h-10 bg-wepp-navy rounded-xl flex items-center justify-center">
                               <Wrench className="w-4 h-4 text-white" />
                             </div>
-                            <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 ${
-                              taller.status === 'Activo' ? 'bg-emerald-50 text-emerald-600' :
-                              taller.status === 'Pendiente' ? 'bg-amber-50 text-amber-600' :
-                              'bg-slate-100 text-slate-400'
-                            }`}>
-                              {taller.status}
-                            </span>
+                            <div className="flex items-center gap-2">
+                              {taller.clientNumber && (
+                                <span className="text-[9px] font-black uppercase tracking-widest px-2 py-1 bg-blue-50 text-blue-600">
+                                  Nº {taller.clientNumber}
+                                </span>
+                              )}
+                              <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-1 ${
+                                taller.status === 'Activo' ? 'bg-emerald-50 text-emerald-600' :
+                                taller.status === 'Pendiente' ? 'bg-amber-50 text-amber-600 animate-pulse' :
+                                'bg-slate-100 text-slate-400'
+                              }`}>
+                                {taller.status}
+                              </span>
+                            </div>
                           </div>
                           <h4 className="text-sm font-black text-wepp-navy uppercase tracking-tight mb-1">{taller.name}</h4>
-                          <div className="flex items-center gap-2 text-slate-400 text-xs mb-3">
+                          {taller.cif && (
+                            <p className="text-[10px] text-slate-400 font-bold mb-2">CIF: {taller.cif}</p>
+                          )}
+                          <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
                             <MapPin className="w-3 h-3 text-wepp-red flex-shrink-0" />
-                            {taller.city}
+                            {taller.address ? `${taller.address}, ${taller.city}` : taller.city}
                           </div>
+                          {taller.shippingAddress && taller.shippingAddress !== taller.address && (
+                            <div className="flex items-center gap-2 text-slate-400 text-xs mb-1">
+                              <span className="text-[9px] text-slate-300 ml-5">Envío: {taller.shippingAddress}</span>
+                            </div>
+                          )}
                           {taller.phone && (
                             <div className="flex items-center gap-2 text-slate-400 text-xs">
                               <Phone className="w-3 h-3 text-wepp-red flex-shrink-0" />
@@ -855,17 +920,48 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                               {taller.email}
                             </div>
                           )}
-                          <button
-                            onClick={async () => {
-                              if (confirm(`¿Eliminar "${taller.name}"?`)) {
-                                const updated = await deleteTaller(taller.id);
-                                setTalleres(updated);
-                              }
-                            }}
-                            className="absolute top-4 right-4 p-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          {taller.orderContactName && (
+                            <div className="mt-3 pt-3 border-t border-slate-100">
+                              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest block mb-1">Contacto Pedidos</span>
+                              <span className="text-xs text-wepp-navy font-bold">{taller.orderContactName}</span>
+                              {taller.orderContactPhone && <span className="text-xs text-slate-400 ml-2">· {taller.orderContactPhone}</span>}
+                            </div>
+                          )}
+                          {taller.gdprAccepted && (
+                            <div className="mt-3 flex items-center gap-1.5">
+                              <div className="w-3 h-3 bg-emerald-100 rounded-full flex items-center justify-center">
+                                <svg className="w-2 h-2 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                              </div>
+                              <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">RGPD Aceptado</span>
+                            </div>
+                          )}
+
+                          {/* Action buttons */}
+                          <div className="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2">
+                            {taller.status === 'Pendiente' && (
+                              <button
+                                onClick={() => {
+                                  setApprovingTaller(taller);
+                                  setApproveClientNumber('');
+                                  setApproveComercialId('');
+                                }}
+                                className="flex-1 bg-emerald-500 text-white py-2 text-[9px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                              >
+                                <CheckCircle className="w-3 h-3" /> Aprobar
+                              </button>
+                            )}
+                            <button
+                              onClick={async () => {
+                                if (confirm(`¿Eliminar "${taller.name}"?`)) {
+                                  const updated = await deleteTaller(taller.id);
+                                  setTalleres(updated);
+                                }
+                              }}
+                              className="p-2 text-slate-300 hover:text-red-500 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -1125,6 +1221,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                 const fd = new FormData(e.currentTarget);
                 const newTaller = await addTaller({
                   name: fd.get('name') as string,
+                  cif: fd.get('cif') as string,
                   city: fd.get('city') as string,
                   address: fd.get('address') as string,
                   phone: fd.get('phone') as string,
@@ -1140,6 +1237,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   <div className="col-span-2 space-y-2">
                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Nombre del Taller</label>
                     <input name="name" required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">CIF / NIF</label>
+                    <input name="cif" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" placeholder="B12345678" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Ciudad</label>
@@ -1404,6 +1505,88 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                   <button type="submit" className="flex-1 py-4 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all">Guardar Cambios</button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Approve Taller Modal */}
+      <AnimatePresence>
+        {approvingTaller && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-wepp-dark/80 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="bg-white w-full max-w-lg p-12 relative border border-white/10"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <h3 className="text-2xl font-black text-wepp-navy uppercase tracking-tighter">Aprobar Taller</h3>
+                <button onClick={() => setApprovingTaller(null)} className="text-slate-400 hover:text-wepp-navy">
+                  <CloseIcon className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Taller summary */}
+              <div className="bg-slate-50 border border-slate-100 p-6 mb-8 space-y-3">
+                <h4 className="text-lg font-black text-wepp-navy uppercase tracking-tight">{approvingTaller.name}</h4>
+                {approvingTaller.cif && <p className="text-xs text-slate-500">CIF: <strong>{approvingTaller.cif}</strong></p>}
+                <p className="text-xs text-slate-500">{approvingTaller.address}, {approvingTaller.city}</p>
+                {approvingTaller.email && <p className="text-xs text-slate-500">{approvingTaller.email} · {approvingTaller.phone}</p>}
+                {approvingTaller.gdprAccepted && (
+                  <div className="flex items-center gap-1.5 pt-2">
+                    <CheckCircle className="w-3 h-3 text-emerald-500" />
+                    <span className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest">RGPD Firmado</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-6">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Número de Cliente *</label>
+                  <input
+                    value={approveClientNumber}
+                    onChange={e => setApproveClientNumber(e.target.value)}
+                    placeholder="Ej: CLI-00123"
+                    className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase tracking-widest text-slate-400">Comercial Asignado *</label>
+                  <select
+                    value={approveComercialId}
+                    onChange={e => setApproveComercialId(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red"
+                  >
+                    <option value="">— Seleccionar Comercial —</option>
+                    {salespeople.filter(s => s.status === 'Activo').map(s => (
+                      <option key={s.id} value={s.id}>{s.name} ({s.region})</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex gap-4 pt-8">
+                <button
+                  type="button"
+                  onClick={() => setApprovingTaller(null)}
+                  className="flex-1 py-4 border border-slate-200 text-[10px] font-black uppercase tracking-widest hover:bg-slate-50"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!approveClientNumber.trim()) return alert('Asigna un número de cliente');
+                    if (!approveComercialId) return alert('Selecciona un comercial');
+                    const updated = await approveTaller(approvingTaller.id, approveClientNumber, approveComercialId);
+                    setTalleres(updated);
+                    setApprovingTaller(null);
+                  }}
+                  className="flex-1 py-4 bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
+                >
+                  <CheckCircle className="w-4 h-4" /> Aprobar y Activar
+                </button>
+              </div>
             </motion.div>
           </div>
         )}

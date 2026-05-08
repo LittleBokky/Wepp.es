@@ -298,10 +298,18 @@ export interface UserSession {
 export interface Taller {
   id: string;
   name: string;
+  cif?: string;
   city: string;
   address?: string;
+  shippingAddress?: string;
   phone?: string;
   email?: string;
+  orderContactName?: string;
+  orderContactPhone?: string;
+  orderContactEmail?: string;
+  gdprAccepted?: boolean;
+  gdprAcceptedAt?: string;
+  clientNumber?: string;
   status: 'Activo' | 'Inactivo' | 'Pendiente';
   joinDate: string;
   notes?: string;
