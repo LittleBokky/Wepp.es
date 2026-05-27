@@ -1,13 +1,15 @@
 import React from 'react';
 import { Product } from '../types';
-import { Plus, ArrowUpRight } from 'lucide-react';
+import { Plus, ArrowUpRight, FileText } from 'lucide-react';
 import { motion } from 'motion/react';
+import { MANUAL_MAP } from '../data/manuals';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const manualUrl = MANUAL_MAP[product.id];
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -33,9 +35,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <p className="text-white text-[10px] md:text-sm leading-relaxed font-light line-clamp-4 md:line-clamp-none">
               {product.description}
             </p>
-            <button className="text-white font-black text-[8px] md:text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 pt-2 md:pt-4 border-b border-white/20 pb-2 hover:border-wepp-red transition-colors">
-              Ficha Técnica <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
-            </button>
+            {manualUrl ? (
+              <a
+                href={manualUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white font-black text-[8px] md:text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 pt-2 md:pt-4 border-b border-white/20 pb-2 hover:border-wepp-red transition-colors"
+                onClick={e => e.stopPropagation()}
+              >
+                Ficha Técnica / Manual <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
+              </a>
+            ) : (
+              <button className="text-white font-black text-[8px] md:text-[10px] uppercase tracking-[0.2em] flex items-center gap-2 pt-2 md:pt-4 border-b border-white/20 pb-2 hover:border-wepp-red transition-colors">
+                Ficha Técnica <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
+              </button>
+            )}
           </div>
         </div>
 
@@ -59,16 +73,30 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {product.name}
         </h3>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2">
           <div className="flex flex-col">
             <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5 md:mb-1">Referencia</span>
             <span className="text-wepp-navy text-xs md:text-xl font-black tracking-tighter">
               Art. Nr. {product.id}
             </span>
           </div>
-          <button className="text-wepp-red font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
-            <span className="hidden xs:inline">Ver Detalles</span> <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
-          </button>
+          <div className="flex items-center gap-2 md:gap-4">
+            {manualUrl && (
+              <a
+                href={manualUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-wepp-navy font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1 hover:text-wepp-red transition-colors shrink-0"
+                onClick={e => e.stopPropagation()}
+              >
+                <FileText className="w-3 h-3 md:w-4 md:h-4" />
+                <span className="hidden xs:inline">Manual</span>
+              </a>
+            )}
+            <button className="text-wepp-red font-black text-[8px] md:text-[10px] uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all shrink-0">
+              <span className="hidden xs:inline">Ver Detalles</span> <ArrowUpRight className="w-3 h-3 md:w-4 md:h-4" />
+            </button>
+          </div>
         </div>
       </div>
     </motion.div>

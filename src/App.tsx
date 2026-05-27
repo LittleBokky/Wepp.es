@@ -446,14 +446,27 @@ function AppContent() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mb-20"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-[2px] w-8 bg-wepp-red"></div>
-                  <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('products.badge')}</span>
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="h-[2px] w-8 bg-wepp-red"></div>
+                      <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.3em]">{t('products.badge')}</span>
+                    </div>
+                    <h2 className="text-5xl md:text-6xl font-black text-wepp-navy uppercase tracking-tighter leading-none">
+                      {t('products.title')} <br />
+                      <span className="text-wepp-red italic font-serif lowercase tracking-normal">{t('products.title_alt')}</span>
+                    </h2>
+                  </div>
+                  <a
+                    href="/catalogo.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 flex items-center gap-2 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest px-6 py-4 hover:bg-wepp-red transition-colors duration-300 shrink-0 self-end"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar Catálogo
+                  </a>
                 </div>
-                <h2 className="text-5xl md:text-6xl font-black text-wepp-navy uppercase tracking-tighter leading-none">
-                  {t('products.title')} <br />
-                  <span className="text-wepp-red italic font-serif lowercase tracking-normal">{t('products.title_alt')}</span>
-                </h2>
               </motion.div>
 
               <div className="flex items-center gap-3 overflow-x-auto pb-8 mb-12 no-scrollbar">
