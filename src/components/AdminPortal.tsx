@@ -563,7 +563,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                       <tr className="bg-slate-50">
                         <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Producto</th>
                         <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Categoría</th>
-                        <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Precio Unit.</th>
+                        <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">PVP sin IVA</th>
+                        <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">PVP con IVA</th>
                         <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Estado Stock</th>
                         <th className="px-8 py-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Acciones</th>
                       </tr>
@@ -583,7 +584,12 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                           <td className="px-8 py-6">
                             <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-slate-100 px-3 py-1">{product.category}</span>
                           </td>
-                          <td className="px-8 py-6 text-xs font-black text-wepp-navy">{product.price.toLocaleString()}€</td>
+                          <td className="px-8 py-6 text-xs font-black text-wepp-navy">
+                            {product.pvp != null ? product.pvp.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : <span className="text-slate-400 font-bold">Sin precio</span>}
+                          </td>
+                          <td className="px-8 py-6 text-xs font-black text-wepp-navy">
+                            {product.pvp_iva != null ? product.pvp_iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : <span className="text-slate-400 font-bold">Sin precio</span>}
+                          </td>
                           <td className="px-8 py-6">
                             <div className="flex items-center gap-3">
                               <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">

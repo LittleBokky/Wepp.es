@@ -282,13 +282,27 @@ export const WorkshopPortal: React.FC<WorkshopPortalProps> = ({ credential, onCl
                     {products.map(p => (
                       <div key={p.id} className="bg-white border border-slate-100 p-8 group hover:shadow-xl transition-all">
                         <div className="h-48 overflow-hidden mb-8">
-                          <img src={p.image} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                          <img src={p.image} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
                         </div>
                         <span className="text-[9px] font-black text-wepp-red uppercase tracking-widest mb-2 block">{p.category}</span>
                         <h4 className="text-lg font-black text-wepp-navy uppercase tracking-tight mb-1">{p.name}</h4>
-                        <div className="flex items-center justify-between mt-8">
-                          <p className="text-2xl font-black text-wepp-navy">{p.price.toLocaleString()}€</p>
-                          <button 
+                        <div className="mt-6 mb-4 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PVP sin IVA</span>
+                            <span className="text-lg font-black text-wepp-navy">
+                              {p.pvp != null ? p.pvp.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : <span className="text-slate-400 text-xs font-bold">Sin precio</span>}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PVP con IVA</span>
+                            <span className="text-sm font-bold text-slate-500">
+                              {p.pvp_iva != null ? p.pvp_iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : '—'}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between mt-4">
+                          <span></span>
+                          <button
                             onClick={() => addToCart(p)}
                             className="bg-wepp-navy text-white px-4 py-3 text-[9px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all"
                           >

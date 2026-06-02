@@ -440,12 +440,25 @@ export const VendorPortal: React.FC<VendorPortalProps> = ({ credential, onClose 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {products.map(p => (
                       <div key={p.id} className="bg-white border border-slate-100 p-8 group hover:shadow-xl transition-all">
-                        <img src={p.image} className="w-full h-48 object-contain mb-8 group-hover:scale-105 transition-transform" />
+                        <img src={p.image} className="w-full h-48 object-contain mb-8 group-hover:scale-105 transition-transform" referrerPolicy="no-referrer" />
                         <span className="text-[9px] font-black text-wepp-red uppercase tracking-widest mb-2 block">{p.category}</span>
                         <h4 className="text-lg font-black text-wepp-navy uppercase tracking-tight mb-1">{p.name}</h4>
-                        <p className="text-2xl font-black text-wepp-navy mb-8">{p.price.toLocaleString()}€</p>
+                        <div className="mb-6 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PVP sin IVA</span>
+                            <span className="text-lg font-black text-wepp-navy">
+                              {p.pvp != null ? p.pvp.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : <span className="text-slate-400 text-xs font-bold">Sin precio</span>}
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">PVP con IVA</span>
+                            <span className="text-sm font-bold text-slate-500">
+                              {p.pvp_iva != null ? p.pvp_iva.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €' : '—'}
+                            </span>
+                          </div>
+                        </div>
                         <div className="flex gap-2">
-                          <button 
+                          <button
                             onClick={() => addToBudget(p)}
                             className="flex-1 py-4 bg-wepp-navy text-white text-[9px] font-black uppercase tracking-widest hover:bg-wepp-red transition-all"
                           >

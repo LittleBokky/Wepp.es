@@ -1,0 +1,1268 @@
+[
+  {
+    "ref": "2010 SF",
+    "nombre_es": "Limpiador de Motor SF (sin disolventes)",
+    "page": 10,
+    "images": [
+      "img-010-032.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 10 compartida con: 2010, 2110"
+  },
+  {
+    "ref": "2110",
+    "nombre_es": "Limpiador Intensivo de Motor",
+    "page": 10,
+    "images": [
+      "img-010-032.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 10 compartida con: 2010, 2010 SF"
+  },
+  {
+    "ref": "2011",
+    "nombre_es": "Tapafugas de Aceite 400",
+    "page": 11,
+    "images": [
+      "img-011-033.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 11 compartida con: 2011-300, 2111"
+  },
+  {
+    "ref": "2011-300",
+    "nombre_es": "Tapafugas de Aceite 300",
+    "page": 11,
+    "images": [
+      "img-011-034.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 11 compartida con: 2011, 2111"
+  },
+  {
+    "ref": "2111",
+    "nombre_es": "Protector Contra el Desgaste del Motor",
+    "page": 11,
+    "images": [
+      "img-011-034.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 11 compartida con: 2011, 2011-300"
+  },
+  {
+    "ref": "2012",
+    "nombre_es": "Aditivos para Aceites de Transmisión",
+    "page": 12,
+    "images": [
+      "img-012-035.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 12 compartida con: 2013"
+  },
+  {
+    "ref": "2013",
+    "nombre_es": "Limpiador de ATF",
+    "page": 12,
+    "images": [
+      "img-012-036.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 12 compartida con: 2012"
+  },
+  {
+    "ref": "2014",
+    "nombre_es": "Protector ATF",
+    "page": 13,
+    "images": [
+      "img-013-037.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 13 compartida con: 2015"
+  },
+  {
+    "ref": "2015",
+    "nombre_es": "Limpiador de Dirección Asistida",
+    "page": 13,
+    "images": [
+      "img-013-038.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 13 compartida con: 2014"
+  },
+  {
+    "ref": "2016",
+    "nombre_es": "Protector de la Dirección Asistida",
+    "page": 14,
+    "images": [
+      "img-014-039.jpg"
+    ],
+    "confidence": "high",
+    "note": ""
+  },
+  {
+    "ref": "2020",
+    "nombre_es": "Protector del Sistema de Refrigeración",
+    "page": 16,
+    "images": [
+      "img-016-040.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 16 compartida con: 2021"
+  },
+  {
+    "ref": "2021",
+    "nombre_es": "Tapafugas",
+    "page": 16,
+    "images": [
+      "img-016-041.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 16 compartida con: 2020"
+  },
+  {
+    "ref": "2023",
+    "nombre_es": "Limpia Radiadores",
+    "page": 17,
+    "images": [
+      "img-017-042.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 17 compartida con: 2123"
+  },
+  {
+    "ref": "2123",
+    "nombre_es": "Protector Térmico",
+    "page": 17,
+    "images": [
+      "img-017-043.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 17 compartida con: 2023"
+  },
+  {
+    "ref": "2024-1000",
+    "nombre_es": "Climafresh",
+    "page": 20,
+    "images": [
+      "img-020-046.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 20 compartida con: 2025, 2125"
+  },
+  {
+    "ref": "2025",
+    "nombre_es": "Airfresh",
+    "page": 20,
+    "images": [
+      "img-020-047.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 20 compartida con: 2024-1000, 2125"
+  },
+  {
+    "ref": "2125",
+    "nombre_es": "Airfresh Menta",
+    "page": 20,
+    "images": [
+      "img-020-047.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 20 compartida con: 2024-1000, 2025"
+  },
+  {
+    "ref": "2127",
+    "nombre_es": "Airclean Limpiador de Conductos de Aire",
+    "page": 21,
+    "images": [
+      "img-021-048.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 21 compartida con: 7020100, 1711"
+  },
+  {
+    "ref": "7020100",
+    "nombre_es": "Tapafugas A/C con Indicador de Fugas",
+    "page": 21,
+    "images": [
+      "img-021-049.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 21 compartida con: 2127, 2127, 1711"
+  },
+  {
+    "ref": "1711",
+    "nombre_es": "Adaptador tapafugas",
+    "page": 21,
+    "images": [
+      "img-021-049.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 21 compartida con: 2127, 2127, 7020100"
+  },
+  {
+    "ref": "7021100",
+    "nombre_es": "Tapafugas A/C sin Indicador de Fugas 100",
+    "page": 22,
+    "images": [
+      "img-022-050.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 22 compartida con: 1711, 7050001, 7050250"
+  },
+  {
+    "ref": "7050250",
+    "nombre_es": "Indicador de Fuga de A/C 250",
+    "page": 22,
+    "images": [
+      "img-022-051.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 22 compartida con: 7021100, 1711, 7050001"
+  },
+  {
+    "ref": "7050001",
+    "nombre_es": "Indicador de Fuga de A/C 1000",
+    "page": 22,
+    "images": [
+      "img-022-051.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 22 compartida con: 7021100, 1711, 7050250"
+  },
+  {
+    "ref": "7034001",
+    "nombre_es": "Lubricante Universal POE 68",
+    "page": 23,
+    "images": [
+      "img-023-052.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 23 compartida con: 7035001, 7035001"
+  },
+  {
+    "ref": "7035001",
+    "nombre_es": "Lubricante Universal POE 68 con Indicador UV",
+    "page": 23,
+    "images": [
+      "img-023-053.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 23 compartida con: 7034001, 7034001"
+  },
+  {
+    "ref": "2127",
+    "nombre_es": "Airclean Limpiador de Conductos de Aire",
+    "page": 21,
+    "images": [
+      "img-021-048.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 21 compartida con: 7020100, 1711"
+  },
+  {
+    "ref": "2030",
+    "nombre_es": "Limpiador Intensivo Diésel",
+    "page": 26,
+    "images": [
+      "img-026-056.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 26 compartida con: 2130"
+  },
+  {
+    "ref": "2130",
+    "nombre_es": "Limpiador de Admisión de Aire Diésel",
+    "page": 26,
+    "images": [
+      "img-026-057.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 26 compartida con: 2030"
+  },
+  {
+    "ref": "2230",
+    "nombre_es": "Limpiador Turbo EGR Aspiración",
+    "page": 27,
+    "images": [
+      "img-027-058.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 27 compartida con: 2031"
+  },
+  {
+    "ref": "2031",
+    "nombre_es": "Limpiador de Válvulas de Mariposa y Carburadores",
+    "page": 27,
+    "images": [
+      "img-027-059.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 27 compartida con: 2230"
+  },
+  {
+    "ref": "2032-300",
+    "nombre_es": "Protector Diésel 300",
+    "page": 28,
+    "images": [
+      "img-028-060.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 28 compartida con: 2032, 2032+"
+  },
+  {
+    "ref": "2032",
+    "nombre_es": "Protector Diésel 400",
+    "page": 28,
+    "images": [
+      "img-028-060.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 28 compartida con: 2032-300, 2032+"
+  },
+  {
+    "ref": "2032+",
+    "nombre_es": "Diésel Limpieza Completa",
+    "page": 28,
+    "images": [
+      "img-028-060.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 28 compartida con: 2032, 2032-300"
+  },
+  {
+    "ref": "732",
+    "nombre_es": "Protector SCR 50",
+    "page": 29,
+    "images": [
+      "img-029-084.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 29 compartida con: 732-400, 2132, 2132-300"
+  },
+  {
+    "ref": "732-400",
+    "nombre_es": "Protector SCR 400",
+    "page": 29,
+    "images": [
+      "img-029-084.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 29 compartida con: 732, 2132, 2132-300"
+  },
+  {
+    "ref": "2132",
+    "nombre_es": "Limpiador DPF Turbo 500",
+    "page": 29,
+    "images": [
+      "img-029-084.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 29 compartida con: 732, 732-400, 2132-300"
+  },
+  {
+    "ref": "2132-300",
+    "nombre_es": "Limpiador DPF Turbo 300",
+    "page": 29,
+    "images": [
+      "img-029-084.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 29 compartida con: 732, 732-400, 2132"
+  },
+  {
+    "ref": "2232",
+    "nombre_es": "Limpiador Directo DPF",
+    "page": 30,
+    "images": [
+      "img-030-086.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 30 compartida con: 2132, 39000"
+  },
+  {
+    "ref": "39000",
+    "nombre_es": "Pistola de Apliación para WEPP 2232",
+    "page": 30,
+    "images": [
+      "img-030-086.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 30 compartida con: 2132, 2232"
+  },
+  {
+    "ref": "39001",
+    "nombre_es": "Sonda para pistola 39000",
+    "page": 31,
+    "images": [
+      "img-031-089.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 31 compartida con: 39000, 2232, 2033"
+  },
+  {
+    "ref": "2033",
+    "nombre_es": "Limpiador Intensivo de Válvulas",
+    "page": 31,
+    "images": [
+      "img-031-089.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 31 compartida con: 39000, 39001, 2232"
+  },
+  {
+    "ref": "2034",
+    "nombre_es": "Limpiador de Inyección Gasolina 500",
+    "page": 32,
+    "images": [
+      "img-032-091.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 32 compartida con: 2034-300, 2034-300, 2036, 2036-300"
+  },
+  {
+    "ref": "2034-300",
+    "nombre_es": "Limpiador de Inyección Gasolina 300",
+    "page": 32,
+    "images": [
+      "img-032-092.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 32 compartida con: 2034, 2036, 2036-300"
+  },
+  {
+    "ref": "2036",
+    "nombre_es": "Protector del Sistema de Inyección 400",
+    "page": 32,
+    "images": [
+      "img-032-092.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 32 compartida con: 2034, 2034-300, 2034-300, 2036-300"
+  },
+  {
+    "ref": "2036-300",
+    "nombre_es": "Protector del Sistema de Inyección 300",
+    "page": 32,
+    "images": [
+      "img-032-092.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 32 compartida con: 2034, 2034-300, 2034-300, 2036"
+  },
+  {
+    "ref": "2036+",
+    "nombre_es": "Protector GDI",
+    "page": 33,
+    "images": [
+      "img-033-114.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 33 compartida con: 2036, 2236"
+  },
+  {
+    "ref": "2536",
+    "nombre_es": "Aditivo para Motores Híbridos",
+    "page": 34,
+    "images": [
+      "img-034-116.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 34 compartida con: 2038"
+  },
+  {
+    "ref": "2038",
+    "nombre_es": "Disolvente Activo",
+    "page": 34,
+    "images": [
+      "img-034-117.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 34 compartida con: 2536"
+  },
+  {
+    "ref": "2055",
+    "nombre_es": "Protector del Sistema de Frenos 400",
+    "page": 36,
+    "images": [
+      "img-036-118.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 36 compartida con: 2057, 255"
+  },
+  {
+    "ref": "2057",
+    "nombre_es": "Protector del Sistema de Frenos 50",
+    "page": 36,
+    "images": [
+      "img-036-119.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 36 compartida con: 2055, 255"
+  },
+  {
+    "ref": "255",
+    "nombre_es": "Frenos Hi Tec",
+    "page": 36,
+    "images": [
+      "img-036-120.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 36 compartida con: 2055, 2057"
+  },
+  {
+    "ref": "2255",
+    "nombre_es": "Pasta de Frenos con Cerámica",
+    "page": 37,
+    "images": [
+      "img-037-121.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 37 compartida con: 2455"
+  },
+  {
+    "ref": "2455",
+    "nombre_es": "Pasta de Frenos",
+    "page": 37,
+    "images": [
+      "img-037-122.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 37 compartida con: 2255"
+  },
+  {
+    "ref": "2022",
+    "nombre_es": "Anticongelante para Parabrisas",
+    "page": 40,
+    "images": [
+      "img-040-125.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 40 compartida con: 2026"
+  },
+  {
+    "ref": "2026",
+    "nombre_es": "Limpiador de Parabrisas Concentrado",
+    "page": 40,
+    "images": [
+      "img-040-126.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 40 compartida con: 2022"
+  },
+  {
+    "ref": "2040",
+    "nombre_es": "Lubricante Sintético Adhesivo 400",
+    "page": 41,
+    "images": [
+      "img-041-127.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 41 compartida con: 2041"
+  },
+  {
+    "ref": "2041",
+    "nombre_es": "Lubricación Adhesiva",
+    "page": 41,
+    "images": [
+      "img-041-128.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 41 compartida con: 2040"
+  },
+  {
+    "ref": "2042",
+    "nombre_es": "Grasa semilíquida Transparente",
+    "page": 42,
+    "images": [
+      "img-042-129.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 42 compartida con: 2043"
+  },
+  {
+    "ref": "2043",
+    "nombre_es": "Aceite Adhesivo de Mantenimiento",
+    "page": 42,
+    "images": [
+      "img-042-130.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 42 compartida con: 2042"
+  },
+  {
+    "ref": "2045",
+    "nombre_es": "Grasa de Silicona",
+    "page": 43,
+    "images": [
+      "img-043-131.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 43 compartida con: 2246"
+  },
+  {
+    "ref": "2246",
+    "nombre_es": "Desbloqueante Activo",
+    "page": 43,
+    "images": [
+      "img-043-132.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 43 compartida con: 2045"
+  },
+  {
+    "ref": "2048",
+    "nombre_es": "Desbloqueante MOS2",
+    "page": 44,
+    "images": [
+      "img-044-134.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 44 compartida con: 2047"
+  },
+  {
+    "ref": "2047",
+    "nombre_es": "Aerosol de Silicona",
+    "page": 44,
+    "images": [
+      "img-044-133.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 44 compartida con: 2048"
+  },
+  {
+    "ref": "2053",
+    "nombre_es": "Aerosol para Interiores",
+    "page": 45,
+    "images": [
+      "img-045-136.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 45 compartida con: 2051"
+  },
+  {
+    "ref": "2054",
+    "nombre_es": "Aerosol de Aceite con PTFE",
+    "page": 46,
+    "images": [
+      "img-046-137.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 46 compartida con: 2056"
+  },
+  {
+    "ref": "2056",
+    "nombre_es": "Aerosol de Grasa con PTFE",
+    "page": 46,
+    "images": [
+      "img-046-138.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 46 compartida con: 2054"
+  },
+  {
+    "ref": "2059",
+    "nombre_es": "Aerosol de Cobre",
+    "page": 47,
+    "images": [
+      "img-047-139.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 47 compartida con: 2060, 2063"
+  },
+  {
+    "ref": "2060",
+    "nombre_es": "Limpiador de Frenos sin Acetona 400",
+    "page": 47,
+    "images": [
+      "img-047-140.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 47 compartida con: 2059, 2063"
+  },
+  {
+    "ref": "2063",
+    "nombre_es": "Limpiador de Frenos sin Acetona 30000",
+    "page": 47,
+    "images": [
+      "img-047-140.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 47 compartida con: 2059, 2060"
+  },
+  {
+    "ref": "2117",
+    "nombre_es": "Limpiador Universal",
+    "page": 48,
+    "images": [
+      "img-048-141.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 48 compartida con: 2061"
+  },
+  {
+    "ref": "2061",
+    "nombre_es": "Limpiacristales",
+    "page": 48,
+    "images": [
+      "img-048-142.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 48 compartida con: 2117, 2117"
+  },
+  {
+    "ref": "2070",
+    "nombre_es": "Limpiacontactos",
+    "page": 49,
+    "images": [
+      "img-049-143.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 49 compartida con: 2071"
+  },
+  {
+    "ref": "2071",
+    "nombre_es": "Limpiador de Electrónica",
+    "page": 49,
+    "images": [
+      "img-049-143.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 49 compartida con: 2070"
+  },
+  {
+    "ref": "2075",
+    "nombre_es": "Autoarranque",
+    "page": 50,
+    "images": [
+      "img-050-158.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 50 compartida con: 2076"
+  },
+  {
+    "ref": "2076",
+    "nombre_es": "Protecttor Bornes",
+    "page": 50,
+    "images": [
+      "img-050-159.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 50 compartida con: 2075"
+  },
+  {
+    "ref": "2094",
+    "nombre_es": "Brillo de Neumáticos",
+    "page": 51,
+    "images": [
+      "img-051-160.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 51 compartida con: 2194"
+  },
+  {
+    "ref": "2194",
+    "nombre_es": "Montaje de Neumáticos",
+    "page": 51,
+    "images": [
+      "img-051-161.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 51 compartida con: 2094"
+  },
+  {
+    "ref": "2095",
+    "nombre_es": "Sustituto de Juntas (negro)",
+    "page": 52,
+    "images": [
+      "img-052-162.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 52 compartida con: 2195"
+  },
+  {
+    "ref": "2195",
+    "nombre_es": "Sustituto de Juntas (gris)",
+    "page": 52,
+    "images": [
+      "img-052-163.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 52 compartida con: 2095"
+  },
+  {
+    "ref": "2096",
+    "nombre_es": "Spray Detector de Fugas (aire)",
+    "page": 53,
+    "images": [
+      "img-053-164.jpg"
+    ],
+    "confidence": "high",
+    "note": ""
+  },
+  {
+    "ref": "2083",
+    "nombre_es": "Limpiador de Vidrios y Pintura",
+    "page": 56,
+    "images": [
+      "img-056-167.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 56 compartida con: 2090"
+  },
+  {
+    "ref": "2090",
+    "nombre_es": "Pintura de Zinc",
+    "page": 56,
+    "images": [
+      "img-056-168.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 56 compartida con: 2083"
+  },
+  {
+    "ref": "2091",
+    "nombre_es": "Protector de Bajos (negro mate)",
+    "page": 57,
+    "images": [
+      "img-057-169.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 57 compartida con: 2092"
+  },
+  {
+    "ref": "2092",
+    "nombre_es": "Sellador de Cavidades (transparente)",
+    "page": 57,
+    "images": [
+      "img-057-170.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 57 compartida con: 2091"
+  },
+  {
+    "ref": "2199",
+    "nombre_es": "Adhesivo de Poluretano 2 componentes 90",
+    "page": 58,
+    "images": [
+      "img-058-171.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 58 compartida con: 2399"
+  },
+  {
+    "ref": "2399",
+    "nombre_es": "Adhesivo de Poluretano 2 componentes 210",
+    "page": 58,
+    "images": [
+      "img-058-171.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 58 compartida con: 2199"
+  },
+  {
+    "ref": "2010",
+    "nombre_es": "Limpiador de Motor 400",
+    "page": 10,
+    "images": [
+      "img-010-032.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 10 compartida con: 2010 SF, 2110"
+  },
+  {
+    "ref": "2010-300",
+    "nombre_es": "Limpiador de Motor 300",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2017",
+    "nombre_es": "Detector de Pérdida de Líquidos",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2028",
+    "nombre_es": "Limpiador de Intercooler",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "1996-45",
+    "nombre_es": "Tubo de 40 cm para Pistola de Desinfección",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "1996-60",
+    "nombre_es": "Tubo de 60 cm para Pistola de Desinfección",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2006",
+    "nombre_es": "Pistola de Desinfección",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7030001",
+    "nombre_es": "PAG 100",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7031001",
+    "nombre_es": "Aceite para Compresor A/C",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7032001",
+    "nombre_es": "Aceite para Compresor R123YF",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7034001",
+    "nombre_es": "Aceite Universal para Compresor",
+    "page": 23,
+    "images": [
+      "img-023-052.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 23 compartida con: 7035001, 7035001"
+  },
+  {
+    "ref": "7035001",
+    "nombre_es": "POE 68 Aceite Universal con Indicador UV",
+    "page": 23,
+    "images": [
+      "img-023-053.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 23 compartida con: 7034001, 7034001"
+  },
+  {
+    "ref": "7040001",
+    "nombre_es": "Aceite de Bomba de Vacío",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7041236",
+    "nombre_es": "Aceite para compresor A/C Híbrido",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "7060100",
+    "nombre_es": "AC Booster",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "1136",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2236",
+    "nombre_es": "Limpiador GLP",
+    "page": 33,
+    "images": [
+      "img-033-114.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 33 compartida con: 2036, 2036+"
+  },
+  {
+    "ref": "2138",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2039-150",
+    "nombre_es": "Flujo Diésel",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2188",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2001",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "20648-08",
+    "nombre_es": "Guantes 8",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "20648-09",
+    "nombre_es": "Guantes 9",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "20648-10",
+    "nombre_es": "Guantes 10",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2555",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2555-99",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2155",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2027",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2040-500",
+    "nombre_es": "Lubricante Sintético Adhesivo 500",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2044",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2051",
+    "nombre_es": "Aerosol de Mantenimiento",
+    "page": 45,
+    "images": [
+      "img-045-135.jpg"
+    ],
+    "confidence": "medium",
+    "note": "Página 45 compartida con: 2053"
+  },
+  {
+    "ref": "2058",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2455001",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2077",
+    "nombre_es": "Adhesivo para Lunas HM/NL 310",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2078",
+    "nombre_es": "Adhesivo para Lunas HM/NL 400",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2177",
+    "nombre_es": "Kit Adhesivo para Lunas HM/NL 310",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2178",
+    "nombre_es": "Kit Adhesivo para Lunas HM/NL 400",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "21290",
+    "nombre_es": "Adhesivo Lunas Económico 290",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "21400",
+    "nombre_es": "Adhesivo Lunas Económico 400",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2181",
+    "nombre_es": "Imprimación",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "1997",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "281000",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "82111",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2086",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2099",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "93001",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "93002",
+    "nombre_es": "",
+    "page": null,
+    "images": [],
+    "confidence": "none",
+    "note": "Ref no encontrada en el PDF"
+  },
+  {
+    "ref": "2034-300",
+    "nombre_es": "",
+    "page": 32,
+    "images": [
+      "img-032-092.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 32 compartida con: 2034, 2036, 2036-300"
+  },
+  {
+    "ref": "2117",
+    "nombre_es": "",
+    "page": 48,
+    "images": [
+      "img-048-141.jpg"
+    ],
+    "confidence": "low",
+    "note": "Página 48 compartida con: 2061"
+  }
+]

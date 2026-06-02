@@ -6,6 +6,10 @@ export interface Product {
   price: number;
   image: string;
   features: string[];
+  pvp?: number | null;
+  pvp_iva?: number | null;
+  nombre_de?: string | null;
+  cantidad?: number | null;
 }
 
 export const PRODUCTS: Product[] = [
