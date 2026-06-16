@@ -8,10 +8,11 @@ import { Wrench } from 'lucide-react';
 interface LoginModalProps {
   onClose: () => void;
   onSuccess: (session: UserSession) => void;
+  adminOnly?: boolean;
 }
 
-export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) => {
-  const [tab, setTab] = useState<'admin' | 'vendor' | 'workshop'>('workshop');
+export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess, adminOnly = false }) => {
+  const [tab, setTab] = useState<'admin' | 'vendor' | 'workshop'>(adminOnly ? 'admin' : 'workshop');
   const [showAdminTab, setShowAdminTab] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [email, setEmail] = useState('');
@@ -62,7 +63,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 24 }}
           transition={{ duration: 0.25 }}
-          className="bg-white w-full max-w-md relative overflow-hidden shadow-2xl"
+          className="bg-white text-slate-900 w-full max-w-md relative overflow-hidden shadow-2xl"
         >
           {/* Header */}
           <div className="bg-wepp-navy p-8 relative overflow-hidden">
@@ -96,40 +97,42 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-slate-100">
-            {showAdminTab && (
+          {!adminOnly && (
+            <div className="flex border-b border-slate-100">
+              {showAdminTab && (
+                <button
+                  onClick={() => { setTab('admin'); setError(''); }}
+                  className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
+                    tab === 'admin'
+                      ? 'text-wepp-navy border-b-2 border-wepp-red'
+                      : 'text-slate-400 hover:text-wepp-navy'
+                  }`}
+                >
+                  <ShieldCheck className="w-4 h-4" /> Administrador
+                </button>
+              )}
               <button
-                onClick={() => { setTab('admin'); setError(''); }}
+                onClick={() => { setTab('vendor'); setError(''); }}
                 className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                  tab === 'admin'
+                  tab === 'vendor'
                     ? 'text-wepp-navy border-b-2 border-wepp-red'
                     : 'text-slate-400 hover:text-wepp-navy'
                 }`}
               >
-                <ShieldCheck className="w-4 h-4" /> Administrador
+                <User className="w-4 h-4" /> Comercial
               </button>
-            )}
-            <button
-              onClick={() => { setTab('vendor'); setError(''); }}
-              className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                tab === 'vendor'
-                  ? 'text-wepp-navy border-b-2 border-wepp-red'
-                  : 'text-slate-400 hover:text-wepp-navy'
-              }`}
-            >
-              <User className="w-4 h-4" /> Comercial
-            </button>
-            <button
-              onClick={() => { setTab('workshop'); setError(''); }}
-              className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
-                tab === 'workshop'
-                  ? 'text-wepp-navy border-b-2 border-wepp-red'
-                  : 'text-slate-400 hover:text-wepp-navy'
-              }`}
-            >
-              <Wrench className="w-4 h-4" /> Taller
-            </button>
-          </div>
+              <button
+                onClick={() => { setTab('workshop'); setError(''); }}
+                className={`flex-1 py-4 text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${
+                  tab === 'workshop'
+                    ? 'text-wepp-navy border-b-2 border-wepp-red'
+                    : 'text-slate-400 hover:text-wepp-navy'
+                }`}
+              >
+                <Wrench className="w-4 h-4" /> Taller
+              </button>
+            </div>
+          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-8 space-y-5">
@@ -224,17 +227,19 @@ export const LoginModal: React.FC<LoginModalProps> = ({ onClose, onSuccess }) =>
             </button>
           </form>
 
-          <div className="px-8 pb-8 text-center -mt-2">
-            <p className="text-[10px] text-slate-400 font-medium">
-              ¿Eres taller y quieres acceso?{' '}
-              <a
-                href="mailto:tecnico@wepp.es"
-                className="text-wepp-red font-black hover:underline"
-              >
-                Contáctanos
-              </a>
-            </p>
-          </div>
+          {!adminOnly && (
+            <div className="px-8 pb-8 text-center -mt-2">
+              <p className="text-[10px] text-slate-400 font-medium">
+                ¿Eres taller y quieres acceso?{' '}
+                <a
+                  href="mailto:tecnico@wepp.es"
+                  className="text-wepp-red font-black hover:underline"
+                >
+                  Contáctanos
+                </a>
+              </p>
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
     </div>

@@ -101,6 +101,44 @@ function AppContent() {
     return <WorkshopPortal credential={session.workshopCredential!} onClose={handleLogout} />;
   }
 
+  // Sitio en mantenimiento para el público — admin puede entrar y probar todo el sitio
+  if (!session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-wepp-navy text-white p-6 relative overflow-hidden">
+        {showLogin && (
+          <LoginModal
+            onClose={() => setShowLogin(false)}
+            onSuccess={handleLoginSuccess}
+            adminOnly
+          />
+        )}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-wepp-red/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-wepp-red/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
+        <div className="relative z-10 text-center max-w-lg">
+          <img src="/Wepp_logo.png" alt="WEPP" className="h-12 mx-auto mb-8 opacity-90" />
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-1.5 h-1.5 rounded-full bg-wepp-red animate-pulse" />
+            <span className="text-wepp-red text-[10px] font-black uppercase tracking-[0.4em]">
+              Sitio en construcción
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+            Próximamente
+          </h1>
+          <p className="text-white/60 text-sm font-medium mb-10">
+            Estamos preparando la nueva web de WEPP. Vuelve pronto.
+          </p>
+          <button
+            onClick={() => setShowLogin(true)}
+            className="bg-white/10 hover:bg-wepp-red text-white px-8 py-3 text-[10px] font-black uppercase tracking-widest transition-all border border-white/10"
+          >
+            Acceder
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col font-sans bg-wepp-silver">
       {showLogin && (
@@ -458,7 +496,7 @@ function AppContent() {
                     </h2>
                   </div>
                   <a
-                    href="/catalogo.pdf"
+                    href="https://mdpmqndnbwohkddwbiff.supabase.co/storage/v1/object/public/documentos/catalogo.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 flex items-center gap-2 bg-wepp-navy text-white text-[10px] font-black uppercase tracking-widest px-6 py-4 hover:bg-wepp-red transition-colors duration-300 shrink-0 self-end"

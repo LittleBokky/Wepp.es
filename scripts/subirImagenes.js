@@ -1,7 +1,7 @@
 // node scripts/subirImagenes.js
 // FASE 2: Sube imágenes a Supabase Storage y crea los productos faltantes.
 // Requiere haber ejecutado antes: node scripts/extraerImagenes.js
-// Requiere VITE_SUPABASE_SERVICE_KEY en el .env
+// Requiere SUPABASE_SERVICE_KEY en el .env
 
 import { readFileSync, existsSync } from 'fs';
 import { fileURLToPath } from 'url';
@@ -23,14 +23,14 @@ const env = Object.fromEntries(
 );
 
 const SUPABASE_URL = env.VITE_SUPABASE_URL;
-const SUPABASE_KEY = env.VITE_SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = env.SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error('❌ Faltan credenciales en .env');
   process.exit(1);
 }
-if (!env.VITE_SUPABASE_SERVICE_KEY) {
-  console.warn('⚠️  Usando anon key — si falla por RLS, añade VITE_SUPABASE_SERVICE_KEY al .env');
+if (!env.SUPABASE_SERVICE_KEY) {
+  console.warn('⚠️  Usando anon key — si falla por RLS, añade SUPABASE_SERVICE_KEY al .env');
 }
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);

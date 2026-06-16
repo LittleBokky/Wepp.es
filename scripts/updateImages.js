@@ -15,7 +15,7 @@ const env = Object.fromEntries(
     .filter(l => l.includes('=') && !l.startsWith('#'))
     .map(l => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim()]; })
 );
-const sb = createClient(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY);
+const sb = createClient(env.VITE_SUPABASE_URL, env.SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY);
 
 // Mapa completo: id en Supabase → URL definitiva de wepp.de
 // Nota: la URL de "2025" mapea al producto "2025-A" (renombrado previamente)

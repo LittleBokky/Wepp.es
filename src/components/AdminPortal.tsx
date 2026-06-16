@@ -138,7 +138,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
   };
 
   const handleUpdateProduct = async (id: string, data: Partial<Product>) => {
-    await updateProduct(id, data);
+    const updated = await updateProduct(id, data);
+    if (updated.length > 0) setProducts(updated);
     setEditingProduct(null);
   };
 
@@ -1106,29 +1107,36 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ onClose, products, set
                 <form onSubmit={(e) => {
                   e.preventDefault();
                   const formData = new FormData(e.currentTarget);
+                  const pvpVal     = parseFloat(formData.get('pvp') as string);
+                  const pvpIvaVal  = parseFloat(formData.get('pvp_iva') as string);
                   handleUpdateProduct(editingProduct.id, {
-                    name: formData.get('name') as string,
-                    category: formData.get('category') as any,
-                    price: parseFloat(formData.get('price') as string),
-                    description: formData.get('description') as string
+                    name:        formData.get('name') as string,
+                    category:    formData.get('category') as any,
+                    description: formData.get('description') as string,
+                    pvp:         isNaN(pvpVal)    ? null : pvpVal,
+                    pvp_iva:     isNaN(pvpIvaVal) ? null : pvpIvaVal,
                   });
                 }} className="space-y-8">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Nombre del Producto</label>
                     <input name="name" defaultValue={editingProduct.name} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
                   </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Categoría</label>
+                    <select name="category" defaultValue={editingProduct.category} className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
+                      {['Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'].map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
                   <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Categoría</label>
-                      <select name="category" defaultValue={editingProduct.category} className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red">
-                        {['Motor y Transmisión', 'Refrigeración', 'Aire Acondicionado', 'Combustible', 'Frenos', 'Mantenimiento y Cuidado', 'Carrocería'].map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
+                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">PVP sin IVA (€)</label>
+                      <input name="pvp" type="number" step="0.01" defaultValue={editingProduct.pvp ?? ''} placeholder="0.00" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Precio (€)</label>
-                      <input name="price" type="number" step="0.01" defaultValue={editingProduct.price} required className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
+                      <label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">PVP con IVA (€)</label>
+                      <input name="pvp_iva" type="number" step="0.01" defaultValue={editingProduct.pvp_iva ?? ''} placeholder="0.00" className="w-full bg-slate-50 border border-slate-200 p-4 text-sm font-bold outline-none focus:border-wepp-red" />
                     </div>
                   </div>
                   <div className="space-y-2">

@@ -21,7 +21,7 @@ const env = Object.fromEntries(
 
 const SUPABASE_URL = env.VITE_SUPABASE_URL;
 // Preferir service key (sin RLS) si está disponible, si no usar anon key
-const SUPABASE_KEY = env.VITE_SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY;
+const SUPABASE_KEY = env.SUPABASE_SERVICE_KEY || env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_KEY) {
   console.error('❌ Faltan VITE_SUPABASE_URL o VITE_SUPABASE_ANON_KEY en el .env');
@@ -160,7 +160,7 @@ async function main() {
       console.error('   Para evitarlo: upgrade a plan Pro, o haz una petición semanal al proyecto.\n');
     } else if (msg.includes('permission') || msg.includes('policy') || msg.includes('42501')) {
       console.error('❌ Error de permisos RLS:', msg);
-      console.error('   Añade al .env: VITE_SUPABASE_SERVICE_KEY=<tu service_role key>');
+      console.error('   Añade al .env: SUPABASE_SERVICE_KEY=<tu service_role key>');
       console.error('   La encuentras en: Supabase Dashboard → Settings → API → service_role key\n');
     } else if (msg.includes('does not exist') || msg.includes('42P01')) {
       console.error('❌ La tabla "products" no existe en Supabase.');
